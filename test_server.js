@@ -5,7 +5,10 @@ const app = express();
 
 app.use(cors());
 
-app.use(express.json());
+app.use(express.json({
+    origin: 'https://simulate-room-web.vercel.app/', // Replace with your Vercel frontend URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}));
 
 app.get('/api/hello', (request, response) => {
     response.json({ message: 'Hello from the backend.' });
