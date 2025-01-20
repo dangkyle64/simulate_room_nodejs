@@ -42,7 +42,7 @@ To use the API, you can make HTTP requests to the endpoints.
 
 - **Test the API**:
   - You can use tools like [Postman](https://www.postman.com/) or [Insomnia](https://insomnia.rest/) to interact with the API.
-
+  - https://simulate-room-nodejs.onrender.com/ 
 ## API Documentation
 
 ### Get Object
