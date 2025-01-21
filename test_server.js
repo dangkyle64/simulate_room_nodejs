@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 
 app.use(express.json({
-    origin: 'https://simulate-room-web.vercel.app/', // Replace with your Vercel frontend URL
+    origin: 'https://simulate-room-web-nextjs-7lkr.vercel.app/', 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 
