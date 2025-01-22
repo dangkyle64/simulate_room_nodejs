@@ -21,6 +21,11 @@ app.use('/api/furniture', furnitureRoutes);
 app.use('/api/room', roomRoutes);
 
 const port = 5000;
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
+
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(port, () => {
+        console.log(`Server is running on http://localhost:${port}`);
+    });
+};
+
+module.exports = app;
