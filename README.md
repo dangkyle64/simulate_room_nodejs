@@ -10,7 +10,7 @@
 
 ## Project Overview
 
-The Node.js backend API serves as the backend for room_sim_web.
+The Node.js backend API serves as the backend for simulate_room_web_nextjs
 
 Key Features:
 - **CRUD Operations**: Create, Read, Update, and Delete operations for items.
@@ -46,12 +46,22 @@ To use the API, you can make HTTP requests to the endpoints.
 ## API Documentation
 
 ### Get Object
-- **Endpoint**: `GET /home`
+- **Endpoint**: `GET /api/get/`
 - **Description**: Retrieves an object with a message property
 - **Response**:
   ```json
     {
-      "message": "Hello from the backend.",
+      "message": "GET request to /api/get",
+    }
+  ```
+
+### Post Object
+- **Endpoint**: `POST /api/post/`
+- **Description**: Sends POST request with the value properties
+- **Response**:
+  ```json
+    {
+      "message": "POST request to /api/post",
     }
   ```
 
