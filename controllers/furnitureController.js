@@ -14,9 +14,14 @@ const getFurnitureByIdController = (request, response) => {
         response.status(404).send({ message: 'Furniture not found'});
     };
 };
-
+// for tests int for type, string for length, null value, empty values, extreme small or large numbers
 const addFurnitureController = (request, response) => {
     const newFurniture = request.body;
+
+    if (!newFurniture.type || typeof newFurniture.type !== 'string') {
+        return response.status(400).json({ error: 'Furniture type is required and must be a string.'});
+    };
+
     const createdFurniture = addFurnitureService(newFurniture);
     response.status(201).json(createdFurniture);
 };
