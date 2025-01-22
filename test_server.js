@@ -4,6 +4,7 @@ const cors = require('cors');
 const getRoutes = require('./routers/getRoutes');
 const postRoutes = require('./routers/postRoutes');
 const furnitureRoutes = require('./routers/furnitureRoutes');
+const roomRoutes = require('./routers/roomRoutes');
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use('/api/get', getRoutes);
 app.use('/api/post', postRoutes);
 app.use('/api/furniture', furnitureRoutes);
+app.use('/api/room', roomRoutes);
 
 const port = 5000;
 app.listen(port, () => {

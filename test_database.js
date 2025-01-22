@@ -1,10 +1,10 @@
 let furniture = [
-    { id: 1, type: 'chair', length: 3, width: 2, height: 1},
-    { id: 2, type: 'table', length: 2, width: 7, height: 1}
+    { id: 0, type: 'chair', length: 3, width: 2, height: 1},
+    { id: 1, type: 'table', length: 2, width: 7, height: 1}
 ];
 
 let room = [
-    { id: 1, length: 5, width: 5, height: 5},
+    { id: 0, length: 5, width: 5, height: 5},
     { id: 1, length: 10, width: 10, height: 10}
 ];
 
@@ -25,11 +25,11 @@ const addFurniture = (newFurniture) => {
 
 //Room mock db functions ----------------------------------------------------------------------------------------------------------------//
 const getAllRooms = () => {
-    return furniture;
+    return room;
 };
 
 const getRoomById = (id) => {
-    return furniture.find(furniture => furniture.id === id);
+    return room.find(room => room.id === id);
 };
 
 const addRoom = (newRoom) => {
