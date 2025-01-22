@@ -8,8 +8,8 @@ const getFurnitureByIdService = (id) => {
     return getFurnitureById(id);
 };
 
-const addFurnitureService = () => {
-    return addFurniture();
+const addFurnitureService = (newFurniture) => {
+    return addFurniture(newFurniture);
 };
 
 module.exports = { getAllFurnituresService, getFurnitureByIdService, addFurnitureService };
