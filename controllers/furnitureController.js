@@ -27,13 +27,24 @@ const getFurnitureByIdController = async (request, response) => {
     };
 };
 
-// for tests int for type, string for length, null value, empty values, extreme small or large numbers
+// for tests null value, extreme small or large numbers
 const addFurnitureController = (request, response) => {
     const newFurniture = request.body;
 
     if (!newFurniture.type || typeof newFurniture.type !== 'string') {
-        console.log('Returning 400 because type is invalid');
         return response.status(400).json({ error: 'Furniture type is required and must be a string.' });
+    };
+
+    if (!newFurniture.length || !Number.isInteger(newFurniture.length) || newFurniture.length < 0) {
+        return response.status(400).json({ error: 'Furniture length is required and must be a positive integer' });
+    };
+
+    if (!newFurniture.width || !Number.isInteger(newFurniture.width) || newFurniture.width < 0) {
+        return response.status(400).json({ error: 'Furniture width is required and must be a positive integer' });
+    };
+
+    if (!newFurniture.height || !Number.isInteger(newFurniture.height) || newFurniture.height < 0) {
+        return response.status(400).json({ error: 'Furniture height is required and must be a positive integer' });
     };
 
     const createdFurniture = addFurnitureService(newFurniture);
