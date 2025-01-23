@@ -3,7 +3,7 @@ const assert = require('assert');
 const { getAllFurnituresService, getFurnitureByIdService, addFurnitureService } = require('../services/furnitureServices');
 
 let response;
-test('should return all current furniture', async () => {
+test('should return all current furniture', () => {
 
     response = getAllFurnituresService();
     

@@ -8,8 +8,8 @@ const getRoomByIdService = (id) => {
     return getRoomById(id);
 };
 
-const addRoomService = () => {
-    return addRoom();
+const addRoomService = (newRoom) => {
+    return addRoom(newRoom);
 };
 
 module.exports = { getAllRoomsService, getRoomByIdService, addRoomService };
