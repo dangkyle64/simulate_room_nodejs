@@ -12,7 +12,7 @@ test('should return all current furniture', () => {
     assert.strictEqual(response[1].width, 7);
 });
 
-test('should return furniture under the id selected', () => {
+test('should return valid furniture under the id selected', () => {
 
     response = getFurnitureByIdService(1);
     assert.strictEqual(response.type, 'table');
