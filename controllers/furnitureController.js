@@ -85,6 +85,8 @@ const deleteFurnitureController = async (request, response) => {
 
         if (furniture) {
             response.status(204).send({ message: 'Furniture successfully deleted' });
+        } else {
+            throw new Error('Furniture not found');
         };
 
     } catch(error) {

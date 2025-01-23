@@ -204,3 +204,30 @@ test('should return a 400 error because null value is not a valid height input',
 
     assert.strictEqual(response.body.error, 'Furniture height is required and must be a positive integer');
 });
+
+test('should return a 404 error because 50 is not a valid furniture', async () => {
+
+    response = await request(app)
+        .delete('/api/furniture/50')
+        .expect(404)
+
+    assert.strictEqual(response.body.message, 'Furniture not found');
+});
+
+test('should return a 404 error because null is not a valid furniture', async () => {
+
+    response = await request(app)
+        .delete('/api/furniture/null')
+        .expect(404)
+
+    assert.strictEqual(response.body.message, 'Furniture not found');
+});
+
+test('should return a 404 error because one is not a valid furniture', async () => {
+
+    response = await request(app)
+        .delete('/api/furniture/one')
+        .expect(404)
+
+    assert.strictEqual(response.body.message, 'Furniture not found');
+});
