@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('assert');
-const { getAllFurnituresService, getFurnitureByIdService, addFurnitureService } = require('../services/furnitureServices');
+const { getAllFurnituresService, getFurnitureByIdService, addFurnitureService, deleteFurnitureService } = require('../services/furnitureServices');
 
 let response;
 test('should return all current furniture', () => {
@@ -33,4 +33,15 @@ test('should add a valid new furniture to the database', () => {
     let furnitureCount = getAllFurnituresService();
 
     assert.strictEqual(furnitureCount.length, 3);
+});
+
+// MOST LIKELY WILL CHANGE WITH ACTUAL DATABASE
+test('should delete furniture under the id selected', () => {
+
+    let furnitureCountBefore = [...getAllFurnituresService()]; // this is storing copy of array rather than reference
+    response = deleteFurnitureService(1);
+    let furnitureCountAfter = getAllFurnituresService();
+
+    assert.strictEqual(furnitureCountBefore.length, 3);
+    assert.strictEqual(furnitureCountAfter.length, 2);
 });
