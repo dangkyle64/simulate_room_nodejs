@@ -1,4 +1,4 @@
-const { getAllFurnituresService, getFurnitureByIdService, addFurnitureService, deleteFurnitureService } = require('../services/furnitureServices');
+const { getAllFurnituresService, getFurnitureByIdService, addFurnitureService, deleteFurnitureService, updateFurnitureService } = require('../services/furnitureServices');
 
 const getAllFurnituresController = (request, response) => {
     const furnitures = getAllFurnituresService();
@@ -51,6 +51,28 @@ const addFurnitureController = (request, response) => {
     response.status(201).json(createdFurniture);
 };
 
+const updateFurnitureController = async (request, response) => {
+    try {
+        const id = parseInt(request.params.id);
+
+        if (isNaN(id)) {
+            throw new Error('Invalid ID input inside of deleteFurnitureController');
+        };
+
+        const furniture = getFurnitureByIdService(id);
+
+        if (furniture) {
+            let updateData = response.body;
+            updateFurnitureService(id, updateData);
+            
+            response.status(200).send({ message: 'Furniture successfully updated' });
+        };
+
+    } catch(error) {
+        response.status(404).send({ message: 'Furniture not found'});
+    };
+};
+
 const deleteFurnitureController = async (request, response) => {
     try {
         const id = parseInt(request.params.id);
@@ -70,4 +92,4 @@ const deleteFurnitureController = async (request, response) => {
     };
 };
 
-module.exports = { getAllFurnituresController, getFurnitureByIdController, addFurnitureController, deleteFurnitureController };
+module.exports = { getAllFurnituresController, getFurnitureByIdController, addFurnitureController, updateFurnitureController, deleteFurnitureController };

@@ -12,7 +12,7 @@ test('should return all current rooms', () => {
 });
 
 test('should return valid room under the id selected', () => {
-    response = getRoomByIdService(0);
+    response = getRoomByIdService(1);
 
     assert.strictEqual(response.length, 5);
     assert.strictEqual(response.height, 5);

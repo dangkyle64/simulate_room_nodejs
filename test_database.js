@@ -1,11 +1,11 @@
 let furniture = [
-    { id: 0, type: 'chair', length: 3, width: 2, height: 1},
-    { id: 1, type: 'table', length: 2, width: 7, height: 1}
+    { id: 1, type: 'chair', length: 3, width: 2, height: 1},
+    { id: 2, type: 'table', length: 2, width: 7, height: 1}
 ];
 
 let room = [
-    { id: 0, length: 5, width: 5, height: 5},
-    { id: 1, length: 10, width: 10, height: 10}
+    { id: 1, length: 5, width: 5, height: 5},
+    { id: 2, length: 10, width: 10, height: 10}
 ];
 
 //Furniture mock db functions ----------------------------------------------------------------------------------------------------------------//
@@ -34,12 +34,11 @@ const updateFurniture = (id, updatedData) => {
 };
 
 const deleteFurniture = (id) => {
-    console.log(id)
+
     const index = furniture.findIndex(furniture => furniture.id === id);
-    console.log(index);
+
     if (index !== -1) {
         furniture.splice(index, 1);
-        console.log(furniture);
         return true;
     };
     return false;
@@ -80,4 +79,4 @@ const deleteRoom = (id) => {
     return false;
 };
 
-module.exports = { getAllFurnitures, getFurnitureById, deleteFurniture, addFurniture, getAllRooms, getRoomById, addRoom };
+module.exports = { getAllFurnitures, getFurnitureById, updateFurniture, deleteFurniture, addFurniture, getAllRooms, getRoomById, addRoom };
