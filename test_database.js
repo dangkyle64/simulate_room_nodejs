@@ -23,6 +23,28 @@ const addFurniture = (newFurniture) => {
     return newFurniture;
 };
 
+const updateFurniture = (id, updatedData) => {
+    const index = furniture.findIndex(furniture => furniture.id === id);
+
+    if (index !== -1) {
+        furniture[index] = { ...furniture[index], ...updatedData};
+        return furniture[index];
+    };
+    return null;
+};
+
+const deleteFurniture = (id) => {
+    console.log(id)
+    const index = furniture.findIndex(furniture => furniture.id === id);
+    console.log(index);
+    if (index !== -1) {
+        furniture.splice(index, 1);
+        console.log(furniture);
+        return true;
+    };
+    return false;
+};
+
 //Room mock db functions ----------------------------------------------------------------------------------------------------------------//
 const getAllRooms = () => {
     return room;
@@ -38,4 +60,24 @@ const addRoom = (newRoom) => {
     return newRoom;
 };
 
-module.exports = { getAllFurnitures, getFurnitureById, addFurniture, getAllRooms, getRoomById, addRoom };
+const updateRoom = (id, updatedData) => {
+    const index = furniture.findIndex(room => room.id === id);
+
+    if (index !== -1) {
+        room[index] = { ...room[index], ...updatedData};
+        return room[index];
+    };
+    return null;
+};
+
+const deleteRoom = (id) => {
+    const index = room.findIndex(room => room.id === id);
+
+    if (index !== -1) {
+        room.splice(index, 1);
+        return true;
+    };
+    return false;
+};
+
+module.exports = { getAllFurnitures, getFurnitureById, deleteFurniture, addFurniture, getAllRooms, getRoomById, addRoom };

@@ -1,4 +1,4 @@
-const { getAllFurnitures, getFurnitureById, addFurniture } = require('../test_database');
+const { getAllFurnitures, getFurnitureById, addFurniture, deleteFurniture } = require('../test_database');
 
 const getAllFurnituresService = () => {
     return getAllFurnitures();
@@ -12,4 +12,8 @@ const addFurnitureService = (newFurniture) => {
     return addFurniture(newFurniture);
 };
 
-module.exports = { getAllFurnituresService, getFurnitureByIdService, addFurnitureService };
+const deleteFurnitureService = (id) => {
+    return deleteFurniture(id);
+};
+
+module.exports = { getAllFurnituresService, getFurnitureByIdService, addFurnitureService, deleteFurnitureService };
