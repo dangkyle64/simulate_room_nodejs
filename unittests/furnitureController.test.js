@@ -140,3 +140,67 @@ test('should return a 400 error because empty input is not a valid height input'
     
     assert.strictEqual(response.body.error, 'Furniture height is required and must be a positive integer');
 });
+
+test('should return a 400 error because null value is not a valid type input', async () => {
+    let newInvalidFurniture = {
+        type: null,
+        length: 1,
+        width: 1,
+        height: 2
+    };
+
+    response = await request(app)
+        .post('/api/furniture/')
+        .send(newInvalidFurniture)
+        .expect(400)
+
+    assert.strictEqual(response.body.error, 'Furniture type is required and must be a string.');
+});
+
+test('should return a 400 error because null value is not a valid length input', async () => {
+    let newInvalidFurniture = {
+        type: 'chair',
+        length: null,
+        width: 1,
+        height: 2
+    };
+
+    response = await request(app)
+        .post('/api/furniture/')
+        .send(newInvalidFurniture)
+        .expect(400)
+
+    assert.strictEqual(response.body.error, 'Furniture length is required and must be a positive integer');
+});
+
+test('should return a 400 error because null value is not a valid width input', async () => {
+    let newInvalidFurniture = {
+        type: 'chair',
+        length: 1,
+        width: null,
+        height: 2
+    };
+
+    response = await request(app)
+        .post('/api/furniture/')
+        .send(newInvalidFurniture)
+        .expect(400)
+
+    assert.strictEqual(response.body.error, 'Furniture width is required and must be a positive integer');
+});
+
+test('should return a 400 error because null value is not a valid height input', async () => {
+    let newInvalidFurniture = {
+        type: 'chair',
+        length: 1,
+        width: 1,
+        height: null
+    };
+
+    response = await request(app)
+        .post('/api/furniture/')
+        .send(newInvalidFurniture)
+        .expect(400)
+
+    assert.strictEqual(response.body.error, 'Furniture height is required and must be a positive integer');
+});
