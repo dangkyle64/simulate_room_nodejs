@@ -205,6 +205,127 @@ test('should return a 400 error because null value is not a valid height input',
     assert.strictEqual(response.body.error, 'Furniture height is required and must be a positive integer');
 });
 
+// updateFurniture tests =============================================================================
+test('should return a 400 error because type is required to be a string', async () => {
+
+    let newInvalidFurniture = {
+        type: 123,
+        length: 1,
+        width: 1,
+        height: 1
+    };
+
+    response = await request(app)
+        .put('/api/furniture/1')
+        .send(newInvalidFurniture)
+        .expect(400)
+
+        assert.strictEqual(response.body.error, 'Furniture type update must be a string.');
+});
+
+test('should return a 400 error because length needs to be a valid positive integer', async () => {
+
+    let newInvalidFurniture = {
+        type: 'chair',
+        length: 'one',
+        width: 1,
+        height: 1
+    };
+
+    response = await request(app)
+        .put('/api/furniture/1')
+        .send(newInvalidFurniture)
+        .expect(400)
+
+        assert.strictEqual(response.body.error, 'Furniture length update must be a valid positive integer');
+});
+
+test('should return a 400 error because width needs to be a valid positive integer', async () => {
+
+    let newInvalidFurniture = {
+        type: 'chair',
+        length: 1,
+        width: 'one',
+        height: 1
+    };
+
+    response = await request(app)
+        .put('/api/furniture/1')
+        .send(newInvalidFurniture)
+        .expect(400)
+
+        assert.strictEqual(response.body.error, 'Furniture width update must be a valid positive integer');
+});
+
+test('should return a 400 error because height needs to be a valid positive integer', async () => {
+
+    let newInvalidFurniture = {
+        type: 'chair',
+        length: 1,
+        width: 1,
+        height: 'one'
+    };
+
+    response = await request(app)
+        .put('/api/furniture/1')
+        .send(newInvalidFurniture)
+        .expect(400)
+
+        assert.strictEqual(response.body.error, 'Furniture height update must be a valid positive integer');
+});
+
+test('should return a 400 error because length needs to be a valid positive integer', async () => {
+
+    let newInvalidFurniture = {
+        type: 'chair',
+        length: null,
+        width: 1,
+        height: 1
+    };
+
+    response = await request(app)
+        .put('/api/furniture/1')
+        .send(newInvalidFurniture)
+        .expect(400)
+
+        assert.strictEqual(response.body.error, 'Furniture length update must be a valid positive integer');
+});
+
+test('should return a 400 error because width needs to be a valid positive integer', async () => {
+
+    let newInvalidFurniture = {
+        type: 'chair',
+        length: 1,
+        width: null,
+        height: 1
+    };
+
+    response = await request(app)
+        .put('/api/furniture/1')
+        .send(newInvalidFurniture)
+        .expect(400)
+
+        assert.strictEqual(response.body.error, 'Furniture width update must be a valid positive integer');
+});
+
+test('should return a 400 error because height needs to be a valid positive integer', async () => {
+
+    let newInvalidFurniture = {
+        type: 'chair',
+        length: 1,
+        width: 1,
+        height: null
+    };
+
+    response = await request(app)
+        .put('/api/furniture/1')
+        .send(newInvalidFurniture)
+        .expect(400)
+
+        assert.strictEqual(response.body.error, 'Furniture height update must be a valid positive integer');
+});
+
+// updateFurniture tests =============================================================================
 test('should return a 404 error because 50 is not a valid furniture', async () => {
 
     response = await request(app)

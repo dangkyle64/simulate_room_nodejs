@@ -62,7 +62,24 @@ const updateFurnitureController = async (request, response) => {
         const furniture = getFurnitureByIdService(id);
 
         if (furniture) {
-            let updateData = response.body;
+            let updateData = request.body;
+
+            if (typeof updateData.type !== 'string') {
+                return response.status(400).json({ error: 'Furniture type update must be a string.' });
+            };
+
+            if (!Number.isInteger(updateData.length) || updateData.length < 0) {
+                return response.status(400).json({ error: 'Furniture length update must be a valid positive integer' });
+            };
+
+            if (!Number.isInteger(updateData.width) || updateData.width < 0) {
+                return response.status(400).json({ error: 'Furniture width update must be a valid positive integer' });
+            };
+
+            if (!Number.isInteger(updateData.height) || updateData.height < 0) {
+                return response.status(400).json({ error: 'Furniture height update must be a valid positive integer' });
+            };
+
             updateFurnitureService(id, updateData);
             
             response.status(200).send({ message: 'Furniture successfully updated' });
