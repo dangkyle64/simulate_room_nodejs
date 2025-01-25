@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('assert');
-const { getAllRoomsService, getRoomByIdService, addRoomService } = require('../services/roomServices');
+const { getAllRoomsService, getRoomByIdService, addRoomService, updateRoomService, deleteRoomService } = require('../services/roomServices');
 
 let response;
 test('should return all current rooms', () => {
@@ -30,4 +30,29 @@ test('should add a new valid room to the database', () => {
     let roomCount = getAllRoomsService();
 
     assert.strictEqual(roomCount.length, 3);
+});
+
+test('should update a valid new room to the database', () => {
+
+    let updateDataRoom = {
+        length: 12,
+        width: 22,
+        height: 32
+    };
+
+    response = updateRoomService(2, updateDataRoom);
+    let testUpdatedRoom = getRoomByIdService(2);
+
+    assert.strictEqual(testUpdatedRoom.width, 22);
+});
+
+// MOST LIKELY WILL CHANGE WITH ACTUAL DATABASE
+test('should delete room under the id selected', () => {
+
+    let roomCountBefore = [...getAllRoomsService()]; // this is storing copy of array rather than reference
+    response = deleteRoomService(1);
+    let roomCountAfter = getAllRoomsService();
+
+    assert.strictEqual(roomCountBefore.length, 3);
+    assert.strictEqual(roomCountAfter.length, 2);
 });
