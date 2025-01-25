@@ -79,4 +79,15 @@ const deleteRoom = (id) => {
     return false;
 };
 
-module.exports = { getAllFurnitures, getFurnitureById, updateFurniture, deleteFurniture, addFurniture, getAllRooms, getRoomById, addRoom };
+module.exports = { 
+    getAllFurnitures, 
+    getFurnitureById, 
+    updateFurniture, 
+    deleteFurniture, 
+    addFurniture, 
+    getAllRooms, 
+    getRoomById, 
+    addRoom,
+    updateRoom,
+    deleteRoom
+};

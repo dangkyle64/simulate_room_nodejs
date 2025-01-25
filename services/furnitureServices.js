@@ -20,4 +20,10 @@ const deleteFurnitureService = (id) => {
     return deleteFurniture(id);
 };
 
-module.exports = { getAllFurnituresService, getFurnitureByIdService, addFurnitureService, updateFurnitureService, deleteFurnitureService };
+module.exports = { 
+    getAllFurnituresService, 
+    getFurnitureByIdService, 
+    addFurnitureService, 
+    updateFurnitureService, 
+    deleteFurnitureService 
+};

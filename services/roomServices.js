@@ -1,4 +1,4 @@
-const { getAllRooms, getRoomById, addRoom } = require('../test_database');
+const { getAllRooms, getRoomById, addRoom, updateRoom, deleteRoom } = require('../test_database');
 
 const getAllRoomsService = () => {
     return getAllRooms();
@@ -12,4 +12,18 @@ const addRoomService = (newRoom) => {
     return addRoom(newRoom);
 };
 
-module.exports = { getAllRoomsService, getRoomByIdService, addRoomService };
+const updateRoomService = (id, updateData) => {
+    return updateRoom(id, updateData);
+};
+
+const deleteRoomService = (id) => {
+    return deleteRoom(id);
+};
+
+module.exports = { 
+    getAllRoomsService, 
+    getRoomByIdService, 
+    addRoomService, 
+    updateRoomService, 
+    deleteRoomService 
+};

@@ -45,4 +45,66 @@ const addRoomController = (request, response) => {
     response.status(201).json(createdRoom);
 };
 
-module.exports = { getAllRoomsController, getRoomByIdController, addRoomController };
+const updateRoomController = async (request, response) => {
+    try {
+        const id = parseInt(request.params.id);
+
+        if (isNaN(id)) {
+            throw new Error('Invalid ID input inside of updateRoomController');
+        };
+
+        const room = getRoomByIdService(id);
+
+        if (room) {
+            let updateData = request.body;
+
+            if (!Number.isInteger(updateData.length) || updateData.length < 0) {
+                return response.status(400).json({ error: 'Room length update must be a valid positive integer' });
+            };
+
+            if (!Number.isInteger(updateData.width) || updateData.width < 0) {
+                return response.status(400).json({ error: 'Room width update must be a valid positive integer' });
+            };
+
+            if (!Number.isInteger(updateData.height) || updateData.height < 0) {
+                return response.status(400).json({ error: 'Room height update must be a valid positive integer' });
+            };
+
+            updateRoomService(id, updateData);
+            
+            response.status(200).send({ message: 'Room successfully updated' });
+        };
+
+    } catch(error) {
+        response.status(404).send({ message: 'Room not found'});
+    };
+};
+
+const deleteRoomController = async (request, response) => {
+    try {
+        const id = parseInt(request.params.id);
+
+        if (isNaN(id)) {
+            throw new Error('Invalid ID input inside of deleteRoomController');
+        };
+
+        const room = deleteRoomService(id);
+
+        if (room) {
+            response.status(204).send({ message: 'Room successfully deleted' });
+        } else {
+            throw new Error('Room not found');
+        };
+
+    } catch(error) {
+        response.status(404).send({ message: 'Room not found'});
+    };
+};
+
+module.exports = { 
+    getAllRoomsController, 
+    getRoomByIdController, 
+    addRoomController,
+    updateRoomController,
+    deleteRoomController
+};

@@ -56,7 +56,7 @@ const updateFurnitureController = async (request, response) => {
         const id = parseInt(request.params.id);
 
         if (isNaN(id)) {
-            throw new Error('Invalid ID input inside of deleteFurnitureController');
+            throw new Error('Invalid ID input inside of updateFurnitureController');
         };
 
         const furniture = getFurnitureByIdService(id);
@@ -111,4 +111,10 @@ const deleteFurnitureController = async (request, response) => {
     };
 };
 
-module.exports = { getAllFurnituresController, getFurnitureByIdController, addFurnitureController, updateFurnitureController, deleteFurnitureController };
+module.exports = { 
+    getAllFurnituresController, 
+    getFurnitureByIdController, 
+    addFurnitureController, 
+    updateFurnitureController, 
+    deleteFurnitureController 
+};
