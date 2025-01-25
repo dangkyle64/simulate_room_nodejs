@@ -325,7 +325,7 @@ test('should return a 400 error because height needs to be a valid positive inte
         assert.strictEqual(response.body.error, 'Furniture height update must be a valid positive integer');
 });
 
-// updateFurniture tests =============================================================================
+// deleteFurniture tests =============================================================================
 test('should return a 404 error because 50 is not a valid furniture', async () => {
 
     response = await request(app)

@@ -166,3 +166,129 @@ test('should return a 400 error because null input is not a valid height input',
     
     assert.strictEqual(response.body.error, 'Room height is required and must be a positive integer');
 });
+
+// updateRoom tests =============================================================================
+
+test('should return a 400 error because length needs to be a valid positive integer', async () => {
+
+    let newInvalidRoom = {
+        length: 'one',
+        width: 1,
+        height: 1
+    };
+
+    response = await request(app)
+        .put('/api/room/1')
+        .send(newInvalidRoom)
+        .expect(400)
+
+        assert.strictEqual(response.body.error, 'Room length update must be a valid positive integer');
+});
+
+test('should return a 400 error because width needs to be a valid positive integer', async () => {
+
+    let newInvalidRoom = {
+        length: 1,
+        width: 'one',
+        height: 1
+    };
+
+    response = await request(app)
+        .put('/api/room/1')
+        .send(newInvalidRoom)
+        .expect(400)
+
+        assert.strictEqual(response.body.error, 'Room width update must be a valid positive integer');
+});
+
+test('should return a 400 error because height needs to be a valid positive integer', async () => {
+
+    let newInvalidRoom = {
+        length: 1,
+        width: 1,
+        height: 'one'
+    };
+
+    response = await request(app)
+        .put('/api/room/1')
+        .send(newInvalidRoom)
+        .expect(400)
+
+        assert.strictEqual(response.body.error, 'Room height update must be a valid positive integer');
+});
+
+test('should return a 400 error because length needs to be a valid positive integer', async () => {
+
+    let newInvalidRoom = {
+        length: null,
+        width: 1,
+        height: 1
+    };
+
+    response = await request(app)
+        .put('/api/room/1')
+        .send(newInvalidRoom)
+        .expect(400)
+
+        assert.strictEqual(response.body.error, 'Room length update must be a valid positive integer');
+});
+
+test('should return a 400 error because width needs to be a valid positive integer', async () => {
+
+    let newInvalidRoom = {
+        length: 1,
+        width: null,
+        height: 1
+    };
+
+    response = await request(app)
+        .put('/api/room/1')
+        .send(newInvalidRoom)
+        .expect(400)
+
+        assert.strictEqual(response.body.error, 'Room width update must be a valid positive integer');
+});
+
+test('should return a 400 error because height needs to be a valid positive integer', async () => {
+
+    let newInvalidRoom = {
+        length: 1,
+        width: 1,
+        height: null
+    };
+
+    response = await request(app)
+        .put('/api/room/1')
+        .send(newInvalidRoom)
+        .expect(400)
+
+        assert.strictEqual(response.body.error, 'Room height update must be a valid positive integer');
+});
+
+// deleteRoom tests =============================================================================
+test('should return a 404 error because 50 is not a valid room', async () => {
+
+    response = await request(app)
+        .delete('/api/room/50')
+        .expect(404)
+
+    assert.strictEqual(response.body.message, 'Room not found');
+});
+
+test('should return a 404 error because null is not a valid room', async () => {
+
+    response = await request(app)
+        .delete('/api/room/null')
+        .expect(404)
+
+    assert.strictEqual(response.body.message, 'Room not found');
+});
+
+test('should return a 404 error because one is not a valid room', async () => {
+
+    response = await request(app)
+        .delete('/api/room/one')
+        .expect(404)
+
+    assert.strictEqual(response.body.message, 'Room not found');
+});
