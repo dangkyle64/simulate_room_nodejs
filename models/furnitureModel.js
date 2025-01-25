@@ -7,6 +7,12 @@ class Furniture extends Model {
         return 'this is an example service function'
     };
     
+    static async getAllFurnitures() {
+        return await this.findAll();
+    };
+
+
+
     // more functions here
 };
 
@@ -16,6 +22,7 @@ Furniture.init({
         //foreign key
         autoIncrement: true,
         allowNull: false,
+        primaryKey: true,
     },
     length: {
         type: DataTypes.INTEGER,

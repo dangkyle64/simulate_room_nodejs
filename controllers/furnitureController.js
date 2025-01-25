@@ -1,8 +1,12 @@
 const { getAllFurnituresService, getFurnitureByIdService, addFurnitureService, deleteFurnitureService, updateFurnitureService } = require('../services/furnitureServices');
 
-const getAllFurnituresController = (request, response) => {
-    const furnitures = getAllFurnituresService();
-    response.json(furnitures);
+const getAllFurnituresController = async (request, response) => {
+    try {
+        const furnitures = getAllFurnituresService();
+        response.json(furnitures);
+    } catch(error) {
+        response.status(500).json({ message: 'Error fetching furniture data' });
+    };
 };
 
 const getFurnitureByIdController = async (request, response) => {
