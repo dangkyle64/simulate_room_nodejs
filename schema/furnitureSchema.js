@@ -1,7 +1,16 @@
-const { DataTypes } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../database');
 
-const Furniture = sequelize.define('Furniture', {
+class Furniture extends Model {
+    
+    exampleFunction() {
+        return 'this is an example service function'
+    };
+    
+    // more functions here
+};
+
+Furniture.init({
     id: {
         type: DataTypes.INTEGER,
         //foreign key
@@ -32,6 +41,11 @@ const Furniture = sequelize.define('Furniture', {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
-});
+},
+    {
+        sequelize,
+        modelName: 'Furniture',
+    }
+);
 
 module.exports = Furniture;
