@@ -1,4 +1,3 @@
-const { getAllFurnitures, getFurnitureById, addFurniture, updateFurniture, deleteFurniture } = require('../test_database');
 const FurnitureORM = require('../models/furnitureModel');
 
 const getAllFurnituresService = () => {

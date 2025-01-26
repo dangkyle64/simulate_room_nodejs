@@ -1,8 +1,12 @@
 const { getAllRoomsService, getRoomByIdService, addRoomService } = require('../services/roomServices');
 
-const getAllRoomsController = (request, response) => {
-    const rooms = getAllRoomsService();
-    response.json(rooms);
+const getAllRoomsController = async (request, response) => {
+    try {
+        const rooms = await getAllRoomsService();
+        response.json(rooms);
+    } catch(error) {
+        response.status(500).json({ message: 'Error fetching room data' });
+    };
 };
 
 const getRoomByIdController = async (request, response) => {
@@ -14,7 +18,7 @@ const getRoomByIdController = async (request, response) => {
             throw new Error('Invalid ID input inside of roomByIdController');
         };
 
-        const room = getRoomByIdService(id);
+        const room = await getRoomByIdService(id);
 
         if (room) {
             response.json(room);
@@ -26,23 +30,29 @@ const getRoomByIdController = async (request, response) => {
     };
 };
 
-const addRoomController = (request, response) => {
-    const newRoom = request.body;
+const addRoomController = async (request, response) => {
 
-    if (!newRoom.length || !Number.isInteger(newRoom.length) || newRoom.length < 0) {
-        return response.status(400).json({ error: 'Room length is required and must be a positive integer' });
+    try {
+
+        const newRoom = request.body;
+
+        if (!newRoom.length || !Number.isInteger(newRoom.length) || newRoom.length < 0) {
+            return response.status(400).json({ error: 'Room length is required and must be a positive integer' });
+        };
+    
+        if (!newRoom.width || !Number.isInteger(newRoom.width) || newRoom.width < 0) {
+            return response.status(400).json({ error: 'Room width is required and must be a positive integer' });
+        };
+    
+        if (!newRoom.height || !Number.isInteger(newRoom.height) || newRoom.height < 0) {
+            return response.status(400).json({ error: 'Room height is required and must be a positive integer' });
+        };
+    
+        const createdRoom = await addRoomService(newRoom);
+        response.status(201).json(createdRoom);
+    } catch(error) {
+        response.status(500).json({ error: 'Error creating room' });
     };
-
-    if (!newRoom.width || !Number.isInteger(newRoom.width) || newRoom.width < 0) {
-        return response.status(400).json({ error: 'Room width is required and must be a positive integer' });
-    };
-
-    if (!newRoom.height || !Number.isInteger(newRoom.height) || newRoom.height < 0) {
-        return response.status(400).json({ error: 'Room height is required and must be a positive integer' });
-    };
-
-    const createdRoom = addRoomService(newRoom);
-    response.status(201).json(createdRoom);
 };
 
 const updateRoomController = async (request, response) => {
@@ -53,7 +63,7 @@ const updateRoomController = async (request, response) => {
             throw new Error('Invalid ID input inside of updateRoomController');
         };
 
-        const room = getRoomByIdService(id);
+        const room = await getRoomByIdService(id);
 
         if (room) {
             let updateData = request.body;
@@ -70,7 +80,7 @@ const updateRoomController = async (request, response) => {
                 return response.status(400).json({ error: 'Room height update must be a valid positive integer' });
             };
 
-            updateRoomService(id, updateData);
+            await updateRoomService(id, updateData);
             
             response.status(200).send({ message: 'Room successfully updated' });
         };
@@ -88,7 +98,7 @@ const deleteRoomController = async (request, response) => {
             throw new Error('Invalid ID input inside of deleteRoomController');
         };
 
-        const room = deleteRoomService(id);
+        const room = await deleteRoomService(id);
 
         if (room) {
             response.status(204).send({ message: 'Room successfully deleted' });

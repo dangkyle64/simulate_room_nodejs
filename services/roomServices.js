@@ -1,23 +1,23 @@
 const { getAllRooms, getRoomById, addRoom, updateRoom, deleteRoom } = require('../test_database');
-
+const RoomORM = require('../models/roomModel');
 const getAllRoomsService = () => {
-    return getAllRooms();
+    return RoomORM.getAllRooms();
 };
 
 const getRoomByIdService = (id) => {
-    return getRoomById(id);
+    return RoomORM.getRoomById(id);
 };
 
 const addRoomService = (newRoom) => {
-    return addRoom(newRoom);
+    return RoomORM.addRoom(newRoom);
 };
 
 const updateRoomService = (id, updateData) => {
-    return updateRoom(id, updateData);
+    return RoomORM.updateRoom(id, updateData);
 };
 
 const deleteRoomService = (id) => {
-    return deleteRoom(id);
+    return RoomORM.deleteRoom(id);
 };
 
 module.exports = { 

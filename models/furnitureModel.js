@@ -2,11 +2,7 @@ const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../database');
 
 class Furniture extends Model {
-    
-    exampleFunction() {
-        return 'this is an example service function'
-    };
-    
+
     static async getAllFurnitures() {
         return await this.findAll();
     };

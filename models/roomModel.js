@@ -3,11 +3,35 @@ const sequelize = require('../database');
 
 class Room extends Model {
     
-    exampleFunction() {
-        return 'this is an example service function'
+    static async getAllRooms() {
+        return await this.findAll();
     };
-    
-    // more functions here
+
+    static async getRoomById(id) {
+        return await this.findByPk(id);
+    };
+
+    static async addRoom(newRoom) {
+        return await this.create(newRoom);
+    };
+
+    static async updateRoom(id, updateData) {
+        let selectedRoom = await this.findByPk(id);
+
+        if (!selectedRoom) {
+            throw new Error('Room not found');
+        }
+        return await selectedRoom.update(updateData);
+    };
+
+    static async deleteRoom(id) {
+        let selectedRoom = await this.findByPk(id);
+
+        if (!selectedRoom) {
+            throw new Error('Room not found');
+        }
+        return await selectedRoom.destroy();
+    };
 };
 
 Room.init({
