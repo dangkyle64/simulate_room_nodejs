@@ -6,19 +6,19 @@ const getAllFurnituresService = () => {
 };
 
 const getFurnitureByIdService = (id) => {
-    return getFurnitureById(id);
+    return FurnitureORM.getFurnitureById(id);
 };
 
 const addFurnitureService = (newFurniture) => {
-    return addFurniture(newFurniture);
+    return FurnitureORM.addFurniture(newFurniture);
 };
 
 const updateFurnitureService = (id, updateData) => {
-    return updateFurniture(id, updateData);
+    return FurnitureORM.updateFurniture(id, updateData);
 };
 
 const deleteFurnitureService = (id) => {
-    return deleteFurniture(id);
+    return FurnitureORM.deleteFurniture(id);
 };
 
 module.exports = { 
