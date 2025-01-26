@@ -40,6 +40,7 @@ Room.init({
         //foreign key
         autoIncrement: true,
         allowNull: false,
+        primaryKey: true,
     },
     length: {
         type: DataTypes.INTEGER,
