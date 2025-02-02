@@ -46,6 +46,10 @@ Furniture.init({
         type: DataTypes.STRING,
         allowNull: true,
     },
+    modelUrl: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     length: {
         type: DataTypes.INTEGER,
         allowNull: true,
@@ -67,6 +71,18 @@ Furniture.init({
         allowNull: true,
     },
     z_position: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    rotation_x: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    rotation_y: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    rotation_z: {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
