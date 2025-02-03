@@ -10,4 +10,6 @@ router.post('', (request, response) => {
     response.json({ message: `Recieved data: Length - ${length}, Width - ${width}, Height - ${height}`});
 });
 
+//post router for images '/image-process' or similar 
+
 module.exports = router;
