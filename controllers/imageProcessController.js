@@ -5,3 +5,10 @@
 
 //Python based so have to use child process to call the models
 // python -> load the ai model then child process call with the image
+// maybe use another API to call the model
+
+const uploadImage = (request) => {
+    // handle incoming image
+    // pass to service
+    // send back either file URL or 3D object data
+};
