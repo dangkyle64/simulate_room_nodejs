@@ -8,9 +8,22 @@ const roomRoutes = require('./routers/roomRoutes');
 
 const app = express();
 
+const allowedOrigins = [
+    'https://simulate-room-web-nextjs-7lkr.vercel.app/',  // Production URL
+    'http://localhost:3000',                 // Local development URL
+];
+
 app.use(cors({
-    origin: 'https://simulate-room-web.vercel.app/', // Replace with your Vercel frontend URL
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));  
+        }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],  
+    allowedHeaders: ['Content-Type', 'Authorization'],  
+    credentials: true, 
 }));
 
 app.use(express.json());
