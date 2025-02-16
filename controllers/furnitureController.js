@@ -68,6 +68,7 @@ const updateFurnitureController = async (request, response) => {
         };
 
         const furniture = await getFurnitureByIdService(id);
+        console.log('Fetched furniture:', furniture);
 
         if (furniture) {
             let updateData = request.body;
@@ -88,9 +89,9 @@ const updateFurnitureController = async (request, response) => {
                 return response.status(400).json({ error: 'Furniture height update must be a valid positive integer' });
             };
 
-            await updateFurnitureService(id, updateData);
+            const updateFurniture = await updateFurnitureService(id, updateData);
             
-            response.status(200).send({ message: 'Furniture successfully updated' });
+            response.status(200).send({ message: 'Furniture successfully updated', updateFurniture });
         };
 
     } catch(error) {
