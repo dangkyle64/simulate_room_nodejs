@@ -60,9 +60,13 @@ const addFurnitureController = async (request, response) => {
 };
 
 const updateFurnitureController = async (request, response) => {
+
+    //console.log('------------------------------------------------------Updating Furniture:', request.body);
+    //console.log('------------------------------------------------------Furniture ID:', request.params.id);
+    
     try {
         const id = parseInt(request.params.id);
-
+        
         if (isNaN(id)) {
             throw new Error('Invalid ID input inside of updateFurnitureController');
         };
@@ -89,9 +93,12 @@ const updateFurnitureController = async (request, response) => {
                 return response.status(400).json({ error: 'Furniture height update must be a valid positive integer' });
             };
 
-            const updateFurniture = await updateFurnitureService(id, updateData);
+            const updatedFurniture = await updateFurnitureService(id, updateData);
             
-            response.status(200).send({ message: 'Furniture successfully updated', updateFurniture });
+            response.status(200).send({ 
+                message: 'Furniture successfully updated', 
+                updateFurniture: updatedFurniture.toJSON()
+            });
         };
 
     } catch(error) {
