@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "node test_server.js"
+    "start": "node test_server.js",
+    "test": "jest"
   },
   "dependencies": {
     "cors": "^2.8.5",
