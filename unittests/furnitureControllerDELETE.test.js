@@ -16,19 +16,19 @@
  */
 
 const request = require('supertest');
-const app = require('../test_server'); // Your Express app
+const app = require('../test_server'); // Import your Express app instance
 const { deleteFurnitureService } = require('../services/furnitureServices');
 
 // Mock the service function to simulate different database responses
 jest.mock('../services/furnitureServices', () => ({
-  deleteFurnitureService: jest.fn(),
+  deleteFurnitureService: jest.fn(),  // Mocking the deleteFurnitureService function
 }));
 
 /**
  * After each test, reset all mocks to ensure no state leaks between tests.
  */
 afterEach(() => {
-    jest.resetAllMocks(); // Reset mock states
+    jest.resetAllMocks(); // Reset mock states after each test to avoid cross-test contamination
 });
 
 describe('DELETE /api/furniture/:id', () => {
@@ -45,8 +45,8 @@ describe('DELETE /api/furniture/:id', () => {
     });
 
     const response = await request(app)
-      .delete('/api/furniture/1')
-      .expect(200);
+      .delete('/api/furniture/1')  // Valid ID
+      .expect(200);  // Expect a 200 OK response
 
     // Assert that the response confirms successful deletion
     expect(response.body.message).toBe('Furniture deleted successfully');
@@ -62,8 +62,8 @@ describe('DELETE /api/furniture/:id', () => {
     deleteFurnitureService.mockResolvedValue(null);
 
     const response = await request(app)
-      .delete('/api/furniture/999999')
-      .expect(404);
+      .delete('/api/furniture/999999')  // Non-existent ID
+      .expect(404);  // Expect a 404 Not Found response
 
     // Assert that the correct error message is returned for non-existent furniture
     expect(response.body.message).toBe('Furniture not found');
@@ -76,10 +76,37 @@ describe('DELETE /api/furniture/:id', () => {
    */
   it('should return 400 for invalid ID format', async () => {
     const response = await request(app)
-      .delete('/api/furniture/invalidID')
-      .expect(400);
+      .delete('/api/furniture/invalidID')  // Invalid ID format (non-numeric)
+      .expect(400);  // Expect a 400 Bad Request response
 
     // Assert that the correct error message is returned for invalid ID format
     expect(response.body.message).toBe('Invalid ID input');
   });
+
+  /**
+   * Test to verify that the controller returns a 400 error when the ID contains
+   * leading zeros. This test ensures that IDs with leading zeros are not accepted.
+   */
+  it('should return 400 for an ID with leading zeros', async () => {
+    const response = await request(app)
+      .delete('/api/furniture/00001')  // ID with leading zeros
+      .expect(400);  // Expect a 400 Bad Request response
+
+    // Assert that the correct error message is returned for IDs with leading zeros
+    expect(response.body.message).toBe('Invalid ID input');
+  });
+
+    /**
+     * Test to verify that the controller returns a 400 error for potential query
+     * parameter injection attacks in the ID. This test simulates an attack vector
+     * to ensure that the ID is sanitized properly.
+     */
+    it('should return 400 for query parameter injection in the ID', async () => {
+        const response = await request(app)
+        .delete('/api/furniture/1; DROP TABLE furniture')  // Potential SQL injection in ID
+        .expect(400);  // Expect a 400 Bad Request response
+
+        // Assert that the correct error message is returned for potential SQL injection
+        expect(response.body.message).toBe('Invalid ID input');
+    });
 });

@@ -121,7 +121,15 @@ const deleteFurnitureController = async (request, response) => {
     try {
         const id = parseInt(request.params.id);
 
-        if (isNaN(id)) {
+        const leadingZeroRegex = /^0\d+/;
+        const invalidCharacterRegex = /[^\d]/;
+
+        if (isNaN(id) ||leadingZeroRegex.test(request.params.id) || invalidCharacterRegex.test(request.params.id)) {
+            return response.status(400).send({ message: 'Invalid ID input' });
+        };
+
+        const invalidSymbolRegex =  /[^0-9]/;;
+        if (invalidSymbolRegex.test(id)) {
             return response.status(400).send({ message: 'Invalid ID input' });
         };
 
