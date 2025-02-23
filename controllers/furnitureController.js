@@ -45,7 +45,7 @@ const addFurnitureController = async (request, response) => {
     const newFurniture = request.body;
 
     try {
-        if (!newFurniture.type || typeof newFurniture.type !== 'string') {
+        if (!newFurniture.type || typeof newFurniture.type !== 'string' || !newFurniture.type.trim()) {
             return response.status(400).json({ error: 'Furniture type is required and must be a string.' });
         };
     
