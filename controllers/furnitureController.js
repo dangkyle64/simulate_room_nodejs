@@ -12,9 +12,18 @@ const getAllFurnituresController = async (request, response) => {
 const getFurnitureByIdController = async (request, response) => {
 
     try {
+
+        const contentType = request.get('Content-Type');
+        if (contentType && contentType !== 'application/json') {
+            return response.status(415).send({ message: 'Unsupported media type' });
+        };
+
         const id = parseInt(request.params.id);
 
-        if (isNaN(id)) {
+        const leadingZeroRegex = /^0\d+/;  // Matches any string that starts with a 0 followed by more digits.
+        const invalidCharacterRegex = /[^\d]/;
+
+        if (isNaN(id) || id < 0 || leadingZeroRegex.test(request.params.id) || invalidCharacterRegex.test(request.params.id)) {
             return response.status(400).send({ message: 'Invalid ID input' });
         };
 
@@ -68,7 +77,7 @@ const updateFurnitureController = async (request, response) => {
         const id = parseInt(request.params.id);
         
         if (isNaN(id)) {
-            throw new Error('Invalid ID input inside of updateFurnitureController');
+            return response.status(400).send({ message: 'Invalid ID input' });
         };
 
         const furniture = await getFurnitureByIdService(id);
@@ -95,14 +104,16 @@ const updateFurnitureController = async (request, response) => {
 
             const updatedFurniture = await updateFurnitureService(id, updateData);
             
-            response.status(200).send({ 
+            return response.status(200).send({ 
                 message: 'Furniture successfully updated', 
                 updateFurniture: updatedFurniture.toJSON()
             });
+        } else {
+            throw Error('Furniture does not exist');
         };
 
     } catch(error) {
-        response.status(404).send({ message: 'Furniture not found'});
+        return response.status(404).send({ message: 'Furniture not found'});
     };
 };
 
