@@ -3,9 +3,9 @@ const { getAllFurnituresService, getFurnitureByIdService, addFurnitureService, d
 const getAllFurnituresController = async (request, response) => {
     try {
         const furnitures = await getAllFurnituresService();
-        response.json(furnitures);
+        return response.json(furnitures);
     } catch(error) {
-        response.status(500).json({ message: 'Error fetching furniture data' });
+        return response.status(500).json({ message: 'Error fetching furniture data' });
     };
 };
 
@@ -15,19 +15,19 @@ const getFurnitureByIdController = async (request, response) => {
         const id = parseInt(request.params.id);
 
         if (isNaN(id)) {
-            throw new Error('Invalid ID input inside of furnitureByIdController');
+            return response.status(400).send({ message: 'Invalid ID input' });
         };
 
         const furniture = await getFurnitureByIdService(id);
 
         if (furniture) {
-            response.json(furniture);
+            return response.status(200).json(furniture);
         } else {
-            response.status(404).send({ message: 'Furniture not found'});
+            return response.status(404).send({ message: 'Furniture not found'});
         };
 
     } catch(error) {
-        response.status(404).send({ message: 'Furniture not found'});
+        return response.status(404).send({ message: 'Furniture not found'});
     };
 };
 
@@ -111,19 +111,19 @@ const deleteFurnitureController = async (request, response) => {
         const id = parseInt(request.params.id);
 
         if (isNaN(id)) {
-            throw new Error('Invalid ID input inside of deleteFurnitureController');
+            return response.status(400).send({ message: 'Invalid ID input' });
         };
 
         const furniture = await deleteFurnitureService(id);
 
         if (furniture) {
-            response.status(204).send({ message: 'Furniture successfully deleted' });
+            return response.status(200).send({ message: 'Furniture deleted successfully' });
         } else {
-            throw new Error('Furniture not found');
+            return response.status(404).send({ message: 'Furniture not found'});
         };
 
     } catch(error) {
-        response.status(404).send({ message: 'Furniture not found'});
+        return response.status(404).send({ message: 'Furniture not found'});
     };
 };
 

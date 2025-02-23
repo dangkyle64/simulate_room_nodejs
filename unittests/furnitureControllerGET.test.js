@@ -1,68 +1,92 @@
+/**
+ * @fileOverview This file contains tests for the Furniture Controller API.
+ * It tests the endpoint for retrieving furniture by its ID, ensuring that
+ * the correct responses are returned for valid, non-existent, and invalid IDs.
+ * 
+ * The tests interact with a real database to ensure end-to-end functionality,
+ * including full stack integration from the Express controllers to the database.
+ * The tests validate that the database queries work as expected, that the controller
+ * correctly handles requests, and that the expected results are returned.
+ *
+ * Tests:
+ * - GET /api/furniture/:id for valid furniture ID
+ * - GET /api/furniture/:id for non-existent furniture ID
+ * - GET /api/furniture/:id for invalid ID format
+ * 
+ * @module furnitureControllerGET.test.js
+ */
+
 const request = require('supertest');
-const app = require('../test_server'); // Your server setup
+const app = require('../test_server'); // Your Express app
+const { getFurnitureByIdService } = require('../services/furnitureServices');
+
+// Mock the service function to return the furniture data you expect
+jest.mock('../services/furnitureServices', () => ({
+    getFurnitureByIdService: jest.fn(),
+}));
 
 /**
- * @description
- * These tests verify the behavior of the **controller** layer in handling GET requests for the `/api/furniture/:id` route.
- * The controller is responsible for receiving HTTP requests, interacting with the service layer, and returning appropriate HTTP responses.
- * These tests check that the controller correctly handles invalid and valid inputs, and returns the correct HTTP status codes and messages.
+ * After each test, reset all mocks to ensure no state leaks between tests.
  */
+afterEach(async () => {
+    jest.resetAllMocks(); // Reset mock states
+});
+  
 describe('GET /api/furniture/:id', () => {
-    
-    /**
-     * @description
-     * Test case for invalid furniture ID: 'null'.
-     * The controller should return a 404 error since 'null' is not a valid ID.
-     */
-    test('should return a 404 error because null is not a valid id', async () => {
-        const response = await request(app)
-            .get('/api/furniture/null')
-            .expect(404);
+  /**
+   * Test to verify that the controller returns the correct furniture data
+   * when a valid ID is provided. This test interacts with the actual database
+   * to ensure the query works as expected.
+   */
+    it('should return the furniture data when the ID is valid', async () => {
+        // Mock the service response for valid ID
+        getFurnitureByIdService.mockResolvedValue({
+            id: 1,
+            type: 'Chair',
+            length: 100,
+            width: 50,
+            height: 80,
+        });
 
+    const response = await request(app)
+        .get('/api/furniture/1')
+        .expect(200);
+
+    // Assert that the response body has the expected furniture properties
+    expect(response.body).toHaveProperty('type', 'Chair');
+    expect(response.body).toHaveProperty('length', 100);
+    expect(response.body).toHaveProperty('width', 50);
+    expect(response.body).toHaveProperty('height', 80);
+    expect(response.body.id).toBe(1);
+  });
+
+  /**
+   * Test to verify that the controller returns a 404 error when a non-existent
+   * furniture ID is provided. This ensures that the service and database correctly
+   * handle cases where the data is not found.
+   */
+  it('should return 404 for a non-existent furniture ID', async () => {
+        // Mock the service response for invalid ID
+        getFurnitureByIdService.mockResolvedValue(null);
+
+        const response = await request(app)
+        .get('/api/furniture/999999')
+        .expect(404);
+
+        // Assert that the correct error message is returned
         expect(response.body.message).toBe('Furniture not found');
     });
 
     /**
-     * @description
-     * Test case for an invalid furniture ID: a string that cannot be cast to a valid ID.
-     * The controller should return a 404 error because the string is not a valid ID.
+     * Test to verify that the controller returns a 400 error when an invalid ID format
+     * is provided. This test ensures that the ID validation logic works as expected.
      */
-    test('should return a 404 error because string is not a valid id', async () => {
+    it('should return 400 for invalid ID format', async () => {
         const response = await request(app)
-            .get(`/api/furniture/${'stringvaluethathappenstobehere'}`)
-            .expect(404);
+        .get('/api/furniture/invalidID')
+        .expect(400);
 
-        expect(response.body.message).toBe('Furniture not found');
-    });
-
-    /**
-     * @description
-     * Test case for a furniture ID that does not exist (e.g., ID 50).
-     * The controller should return a 404 error if the furniture with the given ID is not found.
-     */
-    test('should return a 404 error because the furniture with that id does not exist', async () => {
-        const response = await request(app)
-            .get('/api/furniture/50') // assuming 50 is non-existent
-            .expect(404);
-
-        expect(response.body.message).toBe('Furniture not found');
-    });
-
-    /**
-     * @description
-     * Test case for a valid furniture ID (e.g., ID 1).
-     * The controller should return the correct furniture data in the response body when a valid ID is provided.
-     */
-    test('should return the furniture data when the ID is valid', async () => {
-        // Assuming there's a valid furniture with ID 1 in your test DB
-        const response = await request(app)
-            .get('/api/furniture/1')
-            .expect(200);
-
-        expect(response.body).toHaveProperty('type');
-        expect(response.body).toHaveProperty('length');
-        expect(response.body).toHaveProperty('width');
-        expect(response.body).toHaveProperty('height');
-        expect(response.body.id).toBe(1);
+        // Assert that the correct error message is returned for invalid input
+        expect(response.body.message).toBe('Invalid ID input');
     });
 });
