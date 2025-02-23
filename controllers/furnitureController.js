@@ -86,8 +86,8 @@ const updateFurnitureController = async (request, response) => {
         if (furniture) {
             let updateData = request.body;
 
-            if (typeof updateData.type !== 'string') {
-                return response.status(400).json({ error: 'Furniture type update must be a string.' });
+            if (typeof updateData.type !== 'string' || !updateData.type) {
+                return response.status(400).json({ error: 'Furniture type must be a non-empty string.' });
             };
 
             if (!Number.isInteger(updateData.length) || updateData.length < 0) {
