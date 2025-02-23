@@ -18,11 +18,12 @@
 
 const request = require('supertest');
 const app = require('../test_server'); // Your Express app
-const { getFurnitureByIdService } = require('../services/furnitureServices');
+const { getFurnitureByIdService, getAllFurnituresService } = require('../services/furnitureServices');
 
 // Mock the service function to return the furniture data you expect
 jest.mock('../services/furnitureServices', () => ({
     getFurnitureByIdService: jest.fn(),
+    getAllFurnituresService: jest.fn(),
 }));
 
 /**
@@ -87,6 +88,15 @@ describe('GET /api/furniture/:id', () => {
         .expect(400);
 
         // Assert that the correct error message is returned for invalid input
+        expect(response.body.message).toBe('Invalid ID input');
+    });
+
+    it('should return 400 for a negative ID value', async () => {
+        const response = await request(app)
+            .get('/api/furniture/-1')
+            .expect(400);
+    
+        // Assert that the correct error message is returned for invalid negative ID
         expect(response.body.message).toBe('Invalid ID input');
     });
 });
