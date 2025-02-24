@@ -17,23 +17,96 @@
  */
 
 const request = require('supertest');
-const app = require('../test_server'); // Your Express app
+const app = require('../test_server');
+
+const { getAllFurnituresController } = require('../controllers/furnitureController');
 const { getFurnitureByIdService, getAllFurnituresService } = require('../services/furnitureServices');
 
-// Mock the service function to return the furniture data you expect
 jest.mock('../services/furnitureServices', () => ({
     getFurnitureByIdService: jest.fn(),
     getAllFurnituresService: jest.fn(),
 }));
 
-/**
- * After each test, reset all mocks to ensure no state leaks between tests.
- * @function afterEach
- */
 afterEach(async () => {
     jest.resetAllMocks(); // Reset mock states
 });
-  
+
+describe('GET /api/furniture/', () => {
+    it('should return all the furniture with a 200 OK status code', async () => {
+        getAllFurnituresService.mockResolvedValue([
+            { type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }, 
+            { type: "Coffee Table", modelUrl: "https://example.com/coffee-table-model", length: 12, width: 6, height: 4, x_position: 15, y_position: 8, z_position: 0, rotation_x: 0, rotation_y: 0, rotation_z: 0 }
+        ]);
+
+        const request = {};
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await getAllFurnituresController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(200);
+        expect(response.json).toHaveBeenCalledWith([
+            { type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }, 
+            { type: "Coffee Table", modelUrl: "https://example.com/coffee-table-model", length: 12, width: 6, height: 4, x_position: 15, y_position: 8, z_position: 0, rotation_x: 0, rotation_y: 0, rotation_z: 0 }
+        ]);
+    });
+
+    it('should return a 500 Internal Server Error when database connection fails', async () => {
+        getAllFurnituresService.mockRejectedValue(new Error('Database connection failed.'));
+
+        const request = {};
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await getAllFurnituresController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(500);
+        expect(response.json).toHaveBeenCalledWith(
+            { data: [], error: 'Internal Server Error: Error fetching furniture data' }
+        );
+    });
+
+    it('should return a 500 Internal Server Error when there is a code exception', async () => {
+        getAllFurnituresService.mockRejectedValue(new Error('Code exception'));
+
+        const request = {};
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await getAllFurnituresController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(500);
+        expect(response.json).toHaveBeenCalledWith(
+            { data: [], error: 'Internal Server Error: Error fetching furniture data' }
+        );
+    });
+
+    it('should return a 500 Internal Server Error when request times out', async () => {
+        getAllFurnituresService.mockRejectedValue(new Error('timeout'));
+
+        const request = {};
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await getAllFurnituresController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(500);
+        expect(response.json).toHaveBeenCalledWith(
+            { data: [], error: 'Internal Server Error: External service timeout' }
+        );
+    });
+
+    it('should return a 500 Internal Server Error when too many clients already (POSTGRES ERROR MESSAGE)', async () => {
+        getAllFurnituresService.mockRejectedValue(new Error('too many clients already'));
+
+        const request = {};
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await getAllFurnituresController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(500);
+        expect(response.json).toHaveBeenCalledWith(
+            { data: [], error: 'too many clients already' }
+        );
+    });
+});
+
 /**
  * Tests for the GET /api/furniture/:id endpoint.
  * @description The tests ensure that the controller correctly handles the retrieval of furniture by ID.

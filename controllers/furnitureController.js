@@ -1,11 +1,11 @@
 const { getAllFurnituresService, getFurnitureByIdService, addFurnitureService, deleteFurnitureService, updateFurnitureService } = require('../services/furnitureServices');
-
+const { handleError } = require('../utils/errorHandler');
 const getAllFurnituresController = async (request, response) => {
     try {
         const furnitures = await getAllFurnituresService();
-        return response.json(furnitures);
+        return response.status(200).json(furnitures);
     } catch(error) {
-        return response.status(500).json({ message: 'Error fetching furniture data' });
+        handleError(error, response);
     };
 };
 
