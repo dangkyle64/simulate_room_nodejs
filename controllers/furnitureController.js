@@ -1,5 +1,8 @@
 const { getAllFurnituresService, getFurnitureByIdService, addFurnitureService, deleteFurnitureService, updateFurnitureService } = require('../services/furnitureServices');
+const errorHandler = require('../utils/errorHandler');
 const { handleError } = require('../utils/errorHandler');
+const { handleValidation } = require('../utils/validationHandler');
+
 const getAllFurnituresController = async (request, response) => {
     try {
         const furnitures = await getAllFurnituresService();
@@ -13,30 +16,18 @@ const getFurnitureByIdController = async (request, response) => {
 
     try {
 
-        const contentType = request.get('Content-Type');
-        if (contentType && contentType !== 'application/json') {
-            return response.status(415).send({ message: 'Unsupported media type' });
+        handleValidation(request, response);
+
+        const furniture = await getFurnitureByIdService(parseInt(request.params.id));
+
+        if (!furniture) {
+            throw new Error('404 Not Found'); 
         };
 
-        const id = parseInt(request.params.id);
-
-        const leadingZeroRegex = /^0\d+/;  // Matches any string that starts with a 0 followed by more digits.
-        const invalidCharacterRegex = /[^\d]/;
-
-        if (isNaN(id) || id < 0 || leadingZeroRegex.test(request.params.id) || invalidCharacterRegex.test(request.params.id)) {
-            return response.status(400).send({ message: 'Invalid ID input' });
-        };
-
-        const furniture = await getFurnitureByIdService(id);
-
-        if (furniture) {
-            return response.status(200).json(furniture);
-        } else {
-            return response.status(404).send({ message: 'Furniture not found'});
-        };
+        return response.status(200).json(furniture);
 
     } catch(error) {
-        return response.status(404).send({ message: 'Furniture not found'});
+        handleError(error, response);
     };
 };
 
