@@ -181,6 +181,23 @@ describe('GET /api/furniture/:id', () => {
         });
     });
 
+    it('should return a 400 status code when the ID is a has leading zeros', async () => {
+
+        const request = { 
+            headers: { 'Content-Type': 'application/json' },
+            params: { id: '1; DROP TABLE furniture' } 
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() }; 
+
+        await getFurnitureByIdController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({ 
+            data: null,
+            error: 'Invalid ID. Must be a positive integer.' 
+        });
+    });
+
     it('should return a 404 status code when ID does not exist', async () => {
 
         const request = { 

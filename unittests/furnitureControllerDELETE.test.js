@@ -1,112 +1,153 @@
-/**
- * @fileOverview This file contains tests for the Furniture Controller DELETE API.
- * It tests the endpoint for deleting a furniture item by its ID, ensuring that
- * the correct responses are returned for valid, non-existent, and invalid IDs.
- * 
- * The tests are designed to mock the service layer (e.g., `deleteFurnitureService`)
- * to simulate database interaction, ensuring that the controller logic is validated
- * without affecting the actual database.
- * 
- * Tests:
- * - DELETE /api/furniture/:id for valid furniture ID (successful deletion)
- * - DELETE /api/furniture/:id for non-existent furniture ID (not found)
- * - DELETE /api/furniture/:id for invalid ID format (bad request)
- * 
- * @module furnitureControllerDELETE.test.js
- */
-
-const request = require('supertest');
-const app = require('../test_server'); // Import your Express app instance
 const { deleteFurnitureService } = require('../services/furnitureServices');
+const { deleteFurnitureController } = require('../controllers/furnitureController');
 
-// Mock the service function to simulate different database responses
 jest.mock('../services/furnitureServices', () => ({
-  deleteFurnitureService: jest.fn(),  // Mocking the deleteFurnitureService function
+    deleteFurnitureService: jest.fn(),  
 }));
 
-/**
- * After each test, reset all mocks to ensure no state leaks between tests.
- */
 afterEach(() => {
+    jest.clearAllMocks();
     jest.resetAllMocks(); // Reset mock states after each test to avoid cross-test contamination
 });
 
 describe('DELETE /api/furniture/:id', () => {
+    it('should delete the furniture  and return a 204 No Content status code', async () => {
 
-  /**
-   * Test to verify that the controller successfully deletes a furniture item
-   * when a valid ID is provided. This test mocks the service response to simulate
-   * successful deletion and checks if the controller returns the correct response.
-   */
-  it('should delete the furniture item when the ID is valid', async () => {
-    // Mock the service response for valid ID deletion
-    deleteFurnitureService.mockResolvedValue({
-      message: 'Furniture deleted successfully',
+        deleteFurnitureService.mockResolvedValue({});
+
+        const request = {
+            headers: { 'Content-Type': 'application/json' },
+            params: { id: '1' } 
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await deleteFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(204);
+        expect(response.json).not.toHaveBeenCalled();
     });
 
-    const response = await request(app)
-      .delete('/api/furniture/1')  // Valid ID
-      .expect(200);  // Expect a 200 OK response
+    it('should delete the furniture and return a 204 No Content status code because 0 is a valid id', async () => {
 
-    // Assert that the response confirms successful deletion
-    expect(response.body.message).toBe('Furniture deleted successfully');
-  });
+        deleteFurnitureService.mockResolvedValue({});
 
-  /**
-   * Test to verify that the controller returns a 404 error when trying to
-   * delete a non-existent furniture item. This test mocks the service response
-   * to simulate a "not found" scenario.
-   */
-  it('should return 404 for a non-existent furniture ID', async () => {
-    // Mock the service response for invalid ID (item not found)
-    deleteFurnitureService.mockResolvedValue(null);
+        const request = {
+            headers: { 'Content-Type': 'application/json' },
+            params: { id: '0' } 
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
-    const response = await request(app)
-      .delete('/api/furniture/999999')  // Non-existent ID
-      .expect(404);  // Expect a 404 Not Found response
+        await deleteFurnitureController(request, response);
 
-    // Assert that the correct error message is returned for non-existent furniture
-    expect(response.body.message).toBe('Furniture not found');
-  });
+        expect(response.status).toHaveBeenCalledWith(204);
+        expect(response.json).not.toHaveBeenCalled();
+    });
 
-  /**
-   * Test to verify that the controller returns a 400 error when an invalid ID
-   * format is provided. This test simulates an invalid ID format to ensure
-   * that the controller handles this properly.
-   */
-  it('should return 400 for invalid ID format', async () => {
-    const response = await request(app)
-      .delete('/api/furniture/invalidID')  // Invalid ID format (non-numeric)
-      .expect(400);  // Expect a 400 Bad Request response
+    it('should return a 400 status code when the ID is a non integer string', async () => {
 
-    // Assert that the correct error message is returned for invalid ID format
-    expect(response.body.message).toBe('Invalid ID input');
-  });
+        deleteFurnitureService.mockResolvedValue({});
 
-  /**
-   * Test to verify that the controller returns a 400 error when the ID contains
-   * leading zeros. This test ensures that IDs with leading zeros are not accepted.
-   */
-  it('should return 400 for an ID with leading zeros', async () => {
-    const response = await request(app)
-      .delete('/api/furniture/00001')  // ID with leading zeros
-      .expect(400);  // Expect a 400 Bad Request response
+        const request = {
+            headers: { 'Content-Type': 'application/json' },
+            params: { id: 'notaproperintegertodeletefrom' } 
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
-    // Assert that the correct error message is returned for IDs with leading zeros
-    expect(response.body.message).toBe('Invalid ID input');
-  });
+        await deleteFurnitureController(request, response);
 
-    /**
-     * Test to verify that the controller returns a 400 error for potential query
-     * parameter injection attacks in the ID. This test simulates an attack vector
-     * to ensure that the ID is sanitized properly.
-     */
-    it('should return 400 for query parameter injection in the ID', async () => {
-        const response = await request(app)
-        .delete('/api/furniture/1; DROP TABLE furniture')  // Potential SQL injection in ID
-        .expect(400);  // Expect a 400 Bad Request response
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({ 
+            data: null,
+            error: 'Invalid ID. Must be a postitive integer.' 
+        });
+    });
 
-        // Assert that the correct error message is returned for potential SQL injection
-        expect(response.body.message).toBe('Invalid ID input');
+    it('should return a 400 status code when the ID is a negative integer', async () => {
+
+        const request = { 
+            headers: { 'Content-Type': 'application/json' },
+            params: { id: '-204' } 
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() }; 
+
+        await deleteFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({ 
+            data: null,
+            error: 'Invalid ID. Must be a postitive integer.' 
+        });
+    });
+
+    it('should return a 400 status code when the ID is a has leading zeros', async () => {
+
+        const request = { 
+            headers: { 'Content-Type': 'application/json' },
+            params: { id: '0001' } 
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() }; 
+
+        await deleteFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({ 
+            data: null,
+            error: 'Invalid ID. Must not have trailing zeros.' 
+        });
+    });
+
+    it('should return a 400 status code when the ID is a has leading zeros', async () => {
+
+        const request = { 
+            headers: { 'Content-Type': 'application/json' },
+            params: { id: '1; DROP TABLE furniture' } 
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() }; 
+
+        await deleteFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({ 
+            data: null,
+            error: 'Invalid ID. Must be a positive integer.' 
+        });
+    });
+
+    it('should return a 404 status code when ID does not exist', async () => {
+
+        const request = { 
+            headers: { 'Content-Type': 'application/json' },
+            params: { id: '99999999999999' } 
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() }; 
+
+        await deleteFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(404);
+        expect(response.json).toHaveBeenCalledWith({ 
+            data: null,
+            error: 'Furniture with that ID not found.' 
+        });
+    });
+
+    it('should return a 415 status code when content type is not application/json', async () => {
+
+        deleteFurnitureService.mockResolvedValue(
+            { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        );
+
+        const request = { 
+            headers: { 'Content-Type': 'text/html' },
+            params: { id: '0' } 
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() }; 
+
+        await deleteFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(415);
+        expect(response.json).toHaveBeenCalledWith({ 
+            data: null,
+            error: '415 Unsupported Media Type: The request body must be in JSON format.' 
+        });
     });
 });
