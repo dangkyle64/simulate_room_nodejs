@@ -15,7 +15,7 @@ describe('POST /api/furniture', () => {
         addFurnitureService.mockResolvedValue({ id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 });
 
         const request = {
-          headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json' },
             body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
@@ -249,7 +249,7 @@ describe('POST /api/furniture', () => {
     it('should return the 400 status code when width is a negative integer', async () => {
 
         const request = {
-          headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json' },
             body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, width: -9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };

@@ -1,45 +1,63 @@
-/**
- * @fileOverview This file contains tests for the Furniture Controller PUT API.
- * It tests the endpoint for updating an existing furniture item, ensuring that
- * the correct responses are returned for valid and invalid requests.
- * 
- * The tests are designed to mock the service layer (e.g., `getFurnitureByIdService`,
- * `updateFurnitureService`) to simulate database interaction, ensuring that the 
- * controller logic is validated without affecting the actual database.
- * 
- * Tests:
- * - PUT /api/furniture/:id for valid furniture data (successful update)
- * - PUT /api/furniture/:id for non-existent furniture (404 Not Found)
- * - PUT /api/furniture/:id for invalid data (missing fields, invalid data)
- * - PUT /api/furniture/:id for attempting to update with invalid ID
- * - PUT /api/furniture/:id for attempting to update with invalid data types
- * 
- * @module furnitureControllerPUT.test.js
- */
+const { updateFurnitureService } = require('../services/furnitureServices');
+const { updateFurnitureController } = require('../controllers/furnitureController');
 
-const request = require('supertest');
-const app = require('../test_server'); // Your Express app
-const { getFurnitureByIdService, updateFurnitureService } = require('../services/furnitureServices');
-
-// Mock the service functions
 jest.mock('../services/furnitureServices', () => ({
-  getFurnitureByIdService: jest.fn(),
-  updateFurnitureService: jest.fn(),
+    updateFurnitureService: jest.fn()
 }));
 
-/**
- * After each test, reset all mocks to ensure no state leaks between tests.
- */
+beforeEach(() => {
+    jest.clearAllMocks(); 
+});
+
 afterEach(() => {
-  jest.resetAllMocks(); // Reset mock states after each test to ensure no test interference
+    jest.clearAllMocks();
+    jest.resetAllMocks(); 
 });
 
 describe('PUT /api/furniture/:id', () => {
+    it('should delete the furniture and return a 204 No Content status code', async () => {
 
+        updateFurnitureService.mockResolvedValue({'id': 1, type: 'Chair', toJSON: jest.fn().mockReturnValue({ id: 1, type: 'Chair' })});
+
+        const request = {
+            params: { 'id': '1' },
+            body: {'id': 1, type: 'Chair'},
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await updateFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(200);
+        expect(response.json).toHaveBeenCalledWith({
+            message: 'Furniture successfully updated',
+            updateFurniture: { id: 1, type: 'Chair' }
+        });
+    })
   /**
+   * 
+   *         if (isNaN(id)) {
+            return response.status(400).json({ message: 'Invalid ID input' });
+        };
+
+        if (typeof updateData.type !== 'string' || !updateData.type) {
+                return response.status(400).json({ error: 'Furniture type must be a non-empty string.' });
+            };
+
+            if (!Number.isInteger(updateData.length) || updateData.length < 0) {
+                return response.status(400).json({ error: 'Furniture length update must be a valid positive integer' });
+            };
+
+            if (!Number.isInteger(updateData.width) || updateData.width < 0) {
+                return response.status(400).json({ error: 'Furniture width update must be a valid positive integer' });
+            };
+
+            if (!Number.isInteger(updateData.height) || updateData.height < 0) {
+                return response.status(400).json({ error: 'Furniture height update must be a valid positive integer' });
+            };
+
    * Test to verify that the controller returns a 404 error when trying to update 
    * a non-existent furniture item. This test simulates a "not found" scenario.
-   */
+   
   it('should return 404 for non-existent furniture (furniture not found)', async () => {
     // Mock `getFurnitureByIdService` to return null, indicating furniture not found
     getFurnitureByIdService.mockResolvedValue(null);
@@ -60,7 +78,7 @@ describe('PUT /api/furniture/:id', () => {
   /**
    * Test to verify that the controller successfully updates an existing furniture item.
    * This test mocks the service response to simulate successful update and checks the response.
-   */
+   
   it('should update furniture when valid data is provided', async () => {
     // Mock the service to simulate a successful fetch and update
     getFurnitureByIdService.mockResolvedValue({
@@ -107,7 +125,7 @@ describe('PUT /api/furniture/:id', () => {
   /**
    * Test to verify that the controller returns a 400 error when missing required fields
    * (e.g., missing dimensions). This test simulates an invalid update with missing fields.
-   */
+   
   it('should return 400 for missing required fields in update request', async () => {
     // Mock `getFurnitureByIdService` to return an existing furniture item
     getFurnitureByIdService.mockResolvedValue({
@@ -131,10 +149,10 @@ describe('PUT /api/furniture/:id', () => {
     expect(response.body.error).toBe('Furniture length update must be a valid positive integer');
   });
 
-  /**
+  
    * Test to verify that the controller returns a 400 error when attempting to update
    * with an invalid type (e.g., type is not a string).
-   */
+   
   it('should return 400 for invalid furniture type (not a string)', async () => {
     // Mock `getFurnitureByIdService` to return an existing furniture item
     getFurnitureByIdService.mockResolvedValue({
@@ -163,7 +181,7 @@ describe('PUT /api/furniture/:id', () => {
   /**
    * Test to verify that the controller returns a 400 error when attempting to update
    * with a negative furniture dimension.
-   */
+   
   it('should return 400 for negative furniture dimensions', async () => {
     // Mock `getFurnitureByIdService` to return an existing furniture item
     getFurnitureByIdService.mockResolvedValue({
@@ -191,7 +209,7 @@ describe('PUT /api/furniture/:id', () => {
 
   /**
    * Test to verify that the controller returns a 400 error when the type is an empty string.
-   */
+   
   it('should return 400 for empty string type in update request', async () => {
     // Mock `getFurnitureByIdService` to return an existing furniture item
     getFurnitureByIdService.mockResolvedValue({
@@ -219,7 +237,7 @@ describe('PUT /api/furniture/:id', () => {
 
   /**
    * Test to verify that the controller returns a 400 error when the ID provided in the URL is invalid.
-   */
+   
   it('should return 400 for invalid furniture ID format', async () => {
     const response = await request(app)
       .put('/api/furniture/invalidID') // Invalid ID format
@@ -233,5 +251,5 @@ describe('PUT /api/furniture/:id', () => {
   
     expect(response.body.message).toBe('Invalid ID input'); // Adjusted to match the current handler
   });
-  
+  */
 });

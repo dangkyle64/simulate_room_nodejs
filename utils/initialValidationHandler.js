@@ -2,34 +2,22 @@ module.exports = {
     handleInitialValidation: (request, response) => {
 
         if (request.headers['Content-Type'] !== 'application/json') {
-            return response.status(415).json({
-                data: null,
-                error: '415 Unsupported Media Type: The request body must be in JSON format.'
-            });
+            throw Error('415 Unsupported Media Type: The request body must be in JSON format.')
         };
 
         const id = parseInt(request.params.id);
         if(!Number.isInteger(id) || id < 0) {
-            return response.status(400).json({
-                data: null,
-                error: 'Invalid ID. Must be a postitive integer.'
-            });
+            throw Error('400 invalid');
         };
 
         const leadingZeroRegex = /^0\d+/;
         if(leadingZeroRegex.test(request.params.id)) {
-            return response.status(400).json({
-                data: null,
-                error: 'Invalid ID. Must not have trailing zeros.'
-            });
+            throw Error('400 leading');
         };
 
         const checkInjectionCommandCharactersRegex = /[^\d]/;
         if(checkInjectionCommandCharactersRegex.test(request.params.id)) {
-            return response.status(400).json({
-                data: null,
-                error: 'Invalid ID. Must be a positive integer.'
-            });
+            throw Error('400 invalid');
         };
 
         return {valid: true};

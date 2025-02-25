@@ -44,53 +44,21 @@ const addFurnitureController = async (request, response) => {
 };
 
 const updateFurnitureController = async (request, response) => {
-
-    //console.log('------------------------------------------------------Updating Furniture:', request.body);
-    //console.log('------------------------------------------------------Furniture ID:', request.params.id);
-    
     try {
         const id = parseInt(request.params.id);
-        
-        if (isNaN(id)) {
-            return response.status(400).send({ message: 'Invalid ID input' });
-        };
+        const updateData = request.body;
 
-        const furniture = await getFurnitureByIdService(id);
-        console.log('Fetched furniture:', furniture);
+        const updatedFurniture = await updateFurnitureService(id, updateData);
 
-        if (furniture) {
-            let updateData = request.body;
-
-            if (typeof updateData.type !== 'string' || !updateData.type) {
-                return response.status(400).json({ error: 'Furniture type must be a non-empty string.' });
-            };
-
-            if (!Number.isInteger(updateData.length) || updateData.length < 0) {
-                return response.status(400).json({ error: 'Furniture length update must be a valid positive integer' });
-            };
-
-            if (!Number.isInteger(updateData.width) || updateData.width < 0) {
-                return response.status(400).json({ error: 'Furniture width update must be a valid positive integer' });
-            };
-
-            if (!Number.isInteger(updateData.height) || updateData.height < 0) {
-                return response.status(400).json({ error: 'Furniture height update must be a valid positive integer' });
-            };
-
-            const updatedFurniture = await updateFurnitureService(id, updateData);
-            
-            return response.status(200).send({ 
-                message: 'Furniture successfully updated', 
-                updateFurniture: updatedFurniture.toJSON()
-            });
-        } else {
-            throw Error('Furniture does not exist');
-        };
-
-    } catch(error) {
-        return response.status(404).send({ message: 'Furniture not found'});
-    };
+        return response.status(200).json({ 
+            message: 'Furniture successfully updated', 
+            updateFurniture: updatedFurniture.toJSON()
+        });
+    } catch (error) {
+        return response.status(404).json({ message: 'Furniture not found' });
+    }
 };
+
 
 const deleteFurnitureController = async (request, response) => {
     try {

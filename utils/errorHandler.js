@@ -1,6 +1,20 @@
 module.exports = {
     handleError: (error, response) => {
 
+        if (error.message.includes('400 invalid')) {
+            return response.status(400).json({
+                data: null,
+                error: `Invalid ID. Must be a positive integer.`
+            });
+        };
+
+        if (error.message.includes('400 leading')) {
+            return response.status(400).json({
+                data: null,
+                error: `Invalid ID. Must not have trailing zeros.`
+            });
+        };
+
         if (error.message.includes('404 Not Found')) {
             return response.status(404).json({
                 data: null,

@@ -143,7 +143,7 @@ describe('GET /api/furniture/:id', () => {
         expect(response.status).toHaveBeenCalledWith(400);
         expect(response.json).toHaveBeenCalledWith({ 
             data: null,
-            error: 'Invalid ID. Must be a postitive integer.' 
+            error: 'Invalid ID. Must be a positive integer.' 
         });
     });
 
@@ -160,7 +160,7 @@ describe('GET /api/furniture/:id', () => {
         expect(response.status).toHaveBeenCalledWith(400);
         expect(response.json).toHaveBeenCalledWith({ 
             data: null,
-            error: 'Invalid ID. Must be a postitive integer.' 
+            error: 'Invalid ID. Must be a positive integer.' 
         });
     });
 
@@ -181,7 +181,7 @@ describe('GET /api/furniture/:id', () => {
         });
     });
 
-    it('should return a 400 status code when the ID is a has leading zeros', async () => {
+    it('should return a 400 status code when the ID has unintended scripts', async () => {
 
         const request = { 
             headers: { 'Content-Type': 'application/json' },
