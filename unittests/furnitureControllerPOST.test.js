@@ -1,190 +1,384 @@
-/**
- * @fileOverview This file contains tests for the Furniture Controller POST API.
- * It tests the endpoint for adding a new furniture item, ensuring that
- * the correct responses are returned for valid and invalid requests.
- * 
- * The tests are designed to mock the service layer (e.g., `addFurnitureService`)
- * to simulate database interaction, ensuring that the controller logic is validated
- * without affecting the actual database.
- * 
- * Tests:
- * - POST /api/furniture for valid furniture data (successful creation)
- * - POST /api/furniture for invalid furniture data (missing fields, invalid data)
- * 
- * @module furnitureControllerPOST.test.js
- */
-
-const request = require('supertest');
-const app = require('../test_server'); // Your Express app
 const { addFurnitureService } = require('../services/furnitureServices');
+const { addFurnitureController } = require('../controllers/furnitureController');
 
-// Mock the service function to simulate database responses
 jest.mock('../services/furnitureServices', () => ({
-  addFurnitureService: jest.fn(),
+    addFurnitureService: jest.fn(),
 }));
 
-/**
- * After each test, reset all mocks to ensure no state leaks between tests.
- */
 afterEach(() => {
-    jest.resetAllMocks(); // Reset mock states to avoid state leaks between tests
+    jest.resetAllMocks(); 
 });
 
 describe('POST /api/furniture', () => {
+    it('should return the newly created furniture and a 201 created status code', async () => {
 
-  /**
-   * Test to verify that the controller successfully creates a new furniture
-   * item when valid data is provided. This test mocks the service response
-   * to simulate successful furniture creation.
-   */
-  it('should create a new furniture item when valid data is provided', async () => {
-    // Mock the service response for valid data (simulating successful creation)
-    addFurnitureService.mockResolvedValue({
-      id: 1,
-      type: 'Chair',
-      length: 100,
-      width: 50,
-      height: 80,
+        addFurnitureService.mockResolvedValue({ id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 });
+
+        const request = {
+          headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await addFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(201);
+        expect(response.json).toHaveBeenCalledWith(
+            { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        );
     });
 
-    const newFurniture = {
-      type: 'Chair',
-      length: 100,
-      width: 50,
-      height: 80,
-    };
+    it('should return 400 status code when type is not a string', async () => {
 
-    const response = await request(app)
-      .post('/api/furniture')
-      .send(newFurniture)
-      .expect(201); // Expecting a 201 status code for successful creation
+        const request = {
+            headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: 12345, modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
-    // Assert that the response contains the expected furniture properties
-    expect(response.body).toHaveProperty('id', 1);
-    expect(response.body).toHaveProperty('type', 'Chair');
-    expect(response.body).toHaveProperty('length', 100);
-    expect(response.body).toHaveProperty('width', 50);
-    expect(response.body).toHaveProperty('height', 80);
-  });
+        await addFurnitureController(request, response);
 
-  /**
-   * Test to verify that the controller returns a 400 error when invalid
-   * data is provided (e.g., missing required fields or incorrect types).
-   */
-  it('should return 400 for invalid furniture data (missing or incorrect fields)', async () => {
-    const invalidFurniture = {
-      // Missing required fields, e.g., length and width
-      type: 'Chair',
-      height: 80,
-    };
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+            data: null,
+            error: 'Invalid Type. Must be a valid string.'
+        });
+    });
 
-    const response = await request(app)
-      .post('/api/furniture')
-      .send(invalidFurniture)
-      .expect(400); // Expecting a 400 status code for bad request
+    it('should return 400 status code when type is an empty input', async () => {
 
-    // Assert that the correct error message is returned
-    expect(response.body.error).toBe('Furniture length is required and must be a positive integer');
-  });
+        const request = {
+            headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: '', modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
-  /**
-   * Test to verify that the controller returns a 400 error when a non-string
-   * type is provided for the furniture (invalid type).
-   */
-  it('should return 400 for invalid furniture type (not a string)', async () => {
-    const invalidFurniture = {
-      type: 123, // Invalid type, should be a string
-      length: 100,
-      width: 50,
-      height: 80,
-    };
+        await addFurnitureController(request, response);
 
-    const response = await request(app)
-      .post('/api/furniture')
-      .send(invalidFurniture)
-      .expect(400); // Expecting a 400 status code for bad request
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+            data: null,
+            error: 'Invalid Type. Must be a valid string.'
+        });
+    });
 
-    // Assert that the correct error message is returned
-    expect(response.body.error).toBe('Furniture type is required and must be a string.');
-  });
+    it('should return 400 status code when type is an input with only spaces', async () => {
 
-  /**
-   * Test to verify that the controller returns a 400 error when a negative
-   * furniture dimension is provided (invalid dimension).
-   */
-  it('should return 400 for negative furniture dimensions', async () => {
-    const invalidFurniture = {
-      type: 'Chair',
-      length: -100, // Invalid, should be a positive integer
-      width: 50,
-      height: 80,
-    };
-  
-    const response = await request(app)
-      .post('/api/furniture')
-      .send(invalidFurniture)
-      .expect(400); // Expecting a 400 status code for bad request
-  
-    expect(response.body.error).toBe('Furniture length is required and must be a positive integer');
-  });
+        const request = {
+            headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: '         ', modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
-  /**
-   * Test to verify that the controller returns a 400 error when the type is an empty string.
-   * Empty string should not be allowed as a valid type.
-   */
-  it('should return 400 for empty string type', async () => {
-    const invalidFurniture = {
-      type: '', // Invalid, should be a non-empty string
-      length: 100,
-      width: 50,
-      height: 80,
-    };
-  
-    const response = await request(app)
-      .post('/api/furniture')
-      .send(invalidFurniture)
-      .expect(400); // Expecting a 400 status code for bad request
-  
-    expect(response.body.error).toBe('Furniture type is required and must be a string.');
-  });
+        await addFurnitureController(request, response);
 
-  /**
-   * Test to verify that the controller returns a 400 error when the type is null.
-   * Null value should not be allowed as a valid type.
-   */
-  it('should return 400 for null type', async () => {
-    const invalidFurniture = {
-      type: null, // Invalid, should be a non-null string
-      length: 100,
-      width: 50,
-      height: 80,
-    };
-  
-    const response = await request(app)
-      .post('/api/furniture')
-      .send(invalidFurniture)
-      .expect(400); // Expecting a 400 status code for bad request
-  
-    expect(response.body.error).toBe('Furniture type is required and must be a string.');
-  });
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+            data: null,
+            error: 'Invalid Type. Must be a valid string.'
+        });
+    });
 
-  /**
-   * Test to verify that the controller returns a 400 error when the type consists only of whitespace.
-   * A type that is just whitespace should not be accepted as a valid type.
-   */
-  it('should return 400 for empty string type', async () => {
-    const invalidFurniture = {
-      type: '         ', // Invalid, should be a non-empty string
-      length: 100,
-      width: 50,
-      height: 80,
-    };
-  
-    const response = await request(app)
-      .post('/api/furniture')
-      .send(invalidFurniture)
-      .expect(400); // Expecting a 400 status code for bad request
-  
-    expect(response.body.error).toBe('Furniture type is required and must be a string.');
-  });
+    it('should return 400 status code when modelUrl is an integer rather than a valid url', async () => {
+        const request = {
+            headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: 'Chair', modelUrl: 12345, length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+    
+        await addFurnitureController(request, response);
+    
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+            data: null,
+            error: 'Invalid modelUrl. Must be a valid url.'
+        });
+    });
+
+    it('should return 400 status code when modelUrl is null rather than a valid url', async () => {
+        const request = {
+            headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: 'Chair', modelUrl: null, length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+    
+        await addFurnitureController(request, response);
+    
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+            data: null,
+            error: 'Invalid modelUrl. Must be a valid url.'
+        });
+    });
+
+    it('should return 400 status code when modelUrl is an incorrect website setup rather than a valid url', async () => {
+        const request = {
+            headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: 'Chair', modelUrl: 'google.net', length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+    
+        await addFurnitureController(request, response);
+    
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+            data: null,
+            error: 'Invalid modelUrl. Must be a valid url.'
+        });
+    });
+
+    it('should return the 400 status code when length is a nonnumeric string', async () => {
+
+        const request = {
+          headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 'notaninteger', width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await addFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+          data: null,
+          error: 'Invalid length. Must be a positive integer.'
+        });
+    });
+
+    it('should return the 400 status code when length is null', async () => {
+
+        const request = {
+          headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: null, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await addFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+          data: null,
+          error: 'Invalid length. Must be a positive integer.'
+        });
+    });
+
+    it('should return the 400 status code when length is a negative integer', async () => {
+
+        const request = {
+          headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: -100, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await addFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+          data: null,
+          error: 'Invalid length. Must be a positive integer.'
+        });
+    });
+
+    it('should return the 400 status code when length is whitespace', async () => {
+
+        const request = {
+          headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: '        ', width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await addFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+          data: null,
+          error: 'Invalid length. Must be a positive integer.'
+        });
+    });
+
+    it('should return the 400 status code when length is not initialized', async () => {
+
+        const request = {
+          headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await addFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+          data: null,
+          error: 'Invalid length. Must be a positive integer.'
+        });
+    });
+
+    it('should return the 400 status code when width is a nonnumeric string', async () => {
+
+        const request = {
+          headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, width: 'notaninteger', height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await addFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+          data: null,
+          error: 'Invalid width. Must be a positive integer.'
+        });
+    });
+
+    it('should return the 400 status code when width is null', async () => {
+
+        const request = {
+          headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, width: null, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await addFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+          data: null,
+          error: 'Invalid width. Must be a positive integer.'
+        });
+    });
+
+    it('should return the 400 status code when width is a negative integer', async () => {
+
+        const request = {
+          headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, width: -9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await addFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+          data: null,
+          error: 'Invalid width. Must be a positive integer.'
+        });
+    });
+
+    it('should return the 400 status code when width is whitespace', async () => {
+
+        const request = {
+          headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, width: '       ', height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await addFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+          data: null,
+          error: 'Invalid width. Must be a positive integer.'
+        });
+    });
+
+    it('should return the 400 status code when width is not initialized', async () => {
+
+        const request = {
+          headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await addFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+          data: null,
+          error: 'Invalid width. Must be a positive integer.'
+        });
+    });
+
+    it('should return the 400 status code when height is a nonnumeric string', async () => {
+
+        const request = {
+          headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, width: 19, height: 'notaninteger', x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await addFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+          data: null,
+          error: 'Invalid height. Must be a positive integer.'
+        });
+    });
+
+    it('should return the 400 status code when height is null', async () => {
+
+        const request = {
+          headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, width: 8, height: null, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await addFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+          data: null,
+          error: 'Invalid height. Must be a positive integer.'
+        });
+    });
+
+    it('should return the 400 status code when height is a negative integer', async () => {
+
+        const request = {
+          headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, width: 9, height: -8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await addFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+          data: null,
+          error: 'Invalid height. Must be a positive integer.'
+        });
+    });
+
+    it('should return the 400 status code when height is whitespace', async () => {
+
+        const request = {
+          headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, width: 4, height: '       ', x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await addFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+          data: null,
+          error: 'Invalid height. Must be a positive integer.'
+        });
+    });
+
+    it('should return the 400 status code when height is not initialized', async () => {
+
+        const request = {
+          headers: { 'Content-Type': 'application/json' },
+            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, width: 9, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+        };
+        const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+        await addFurnitureController(request, response);
+
+        expect(response.status).toHaveBeenCalledWith(400);
+        expect(response.json).toHaveBeenCalledWith({
+          data: null,
+          error: 'Invalid height. Must be a positive integer.'
+        });
+    });
 });

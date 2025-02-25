@@ -1,5 +1,5 @@
 module.exports = {
-    handleValidation: (request, response) => {
+    handleInitialValidation: (request, response) => {
 
         if (request.headers['Content-Type'] !== 'application/json') {
             return response.status(415).json({
@@ -25,13 +25,13 @@ module.exports = {
         };
 
         const checkInjectionCommandCharactersRegex = /[^\d]/;
-        if (checkInjectionCommandCharactersRegex.test(request.params.id)) {
+        if(checkInjectionCommandCharactersRegex.test(request.params.id)) {
             return response.status(400).json({
                 data: null,
                 error: 'Invalid ID. Must be a positive integer.'
             });
         };
-        
+
         return {valid: true};
     }
 };

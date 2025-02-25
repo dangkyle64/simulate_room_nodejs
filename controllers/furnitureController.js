@@ -1,7 +1,7 @@
 const { getAllFurnituresService, getFurnitureByIdService, addFurnitureService, deleteFurnitureService, updateFurnitureService } = require('../services/furnitureServices');
-const errorHandler = require('../utils/errorHandler');
 const { handleError } = require('../utils/errorHandler');
-const { handleValidation } = require('../utils/validationHandler');
+const { handleInitialValidation } = require('../utils/initialValidationHandler');
+const { handlePOSTValidation } = require('../utils/postValidationHandler');
 
 const getAllFurnituresController = async (request, response) => {
     try {
@@ -16,7 +16,7 @@ const getFurnitureByIdController = async (request, response) => {
 
     try {
 
-        handleValidation(request, response);
+        handleInitialValidation(request, response);
 
         const furniture = await getFurnitureByIdService(parseInt(request.params.id));
 
@@ -31,27 +31,11 @@ const getFurnitureByIdController = async (request, response) => {
     };
 };
 
-// for tests null value, extreme small or large numbers
 const addFurnitureController = async (request, response) => {
     const newFurniture = request.body;
 
+    handlePOSTValidation(request, response);
     try {
-        if (!newFurniture.type || typeof newFurniture.type !== 'string' || !newFurniture.type.trim()) {
-            return response.status(400).json({ error: 'Furniture type is required and must be a string.' });
-        };
-    
-        if (!newFurniture.length || !Number.isInteger(newFurniture.length) || newFurniture.length < 0) {
-            return response.status(400).json({ error: 'Furniture length is required and must be a positive integer' });
-        };
-    
-        if (!newFurniture.width || !Number.isInteger(newFurniture.width) || newFurniture.width < 0) {
-            return response.status(400).json({ error: 'Furniture width is required and must be a positive integer' });
-        };
-    
-        if (!newFurniture.height || !Number.isInteger(newFurniture.height) || newFurniture.height < 0) {
-            return response.status(400).json({ error: 'Furniture height is required and must be a positive integer' });
-        };
-
         const createdFurniture = await addFurnitureService(newFurniture);
         response.status(201).json(createdFurniture);
     } catch(error) {
@@ -111,7 +95,7 @@ const updateFurnitureController = async (request, response) => {
 const deleteFurnitureController = async (request, response) => {
     try {
 
-        handleValidation(request, response);
+        handleInitialValidation(request, response);
 
         const furniture = await deleteFurnitureService(parseInt(request.params.id));
             
