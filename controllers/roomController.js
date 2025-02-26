@@ -1,4 +1,4 @@
-const { getAllRoomsService, getRoomByIdService, addRoomService } = require('../services/roomServices');
+const { getAllRoomsService, getRoomByIdService, addRoomService, updateRoomService, deleteRoomService } = require('../services/roomServices');
 const { handleError } = require('../utils/errorHandler');
 const { handleInitialValidation } = require('../utils/initialValidationHandler');
 
@@ -16,9 +16,7 @@ const getRoomByIdController = async (request, response) => {
     try {
         handleInitialValidation(request, response);
 
-        const id = parseInt(request.params.id);
-
-        const room = await getRoomByIdService(id);
+        const room = await getRoomByIdService(parseInt(request.params.id));
 
         if (!room) {
             throw Error('404 Not Found: Room not found'); 
@@ -93,22 +91,18 @@ const updateRoomController = async (request, response) => {
 
 const deleteRoomController = async (request, response) => {
     try {
-        const id = parseInt(request.params.id);
+        handleInitialValidation(request, response);
 
-        if (isNaN(id)) {
-            throw new Error('Invalid ID input inside of deleteRoomController');
+        const room = await deleteRoomService(parseInt(request.params.id));
+
+        if (!room) {
+            throw Error('404 Not Found: Room not found'); 
         };
 
-        const room = await deleteRoomService(id);
-
-        if (room) {
-            response.status(204).json({ message: 'Room successfully deleted' });
-        } else {
-            throw new Error('Room not found');
-        };
+        return response.status(204);
 
     } catch(error) {
-        response.status(404).json({ message: 'Room not found'});
+        handleError(error, response);
     };
 };
 

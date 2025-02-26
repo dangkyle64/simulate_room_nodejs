@@ -56,7 +56,6 @@ module.exports = {
                 error: 'too many clients already' 
             });
         };
-
         return response.status(500).json({ 
             data: [], 
             error: 'Internal Server Error: Error fetching data' 

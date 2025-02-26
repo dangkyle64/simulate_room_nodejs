@@ -1,8 +1,8 @@
-const { deleteFurnitureService } = require('../services/furnitureServices');
-const { deleteFurnitureController } = require('../controllers/furnitureController');
+const { deleteRoomService } = require('../services/roomServices');
+const { deleteRoomController } = require('../controllers/roomController');
 
-jest.mock('../services/furnitureServices', () => ({
-    deleteFurnitureService: jest.fn(),  
+jest.mock('../services/roomServices', () => ({
+    deleteRoomService: jest.fn(),  
 }));
 
 afterEach(() => {
@@ -10,10 +10,10 @@ afterEach(() => {
     jest.resetAllMocks(); 
 });
 
-describe('DELETE /api/furniture/:id', () => {
-    it('should delete the furniture and return a 204 No Content status code', async () => {
+describe('DELETE /api/room/:id', () => {
+    it('should delete the room and return a 204 No Content status code', async () => {
 
-        deleteFurnitureService.mockResolvedValue({});
+        deleteRoomService.mockResolvedValue({});
 
         const request = {
             headers: { 'Content-Type': 'application/json' },
@@ -21,15 +21,15 @@ describe('DELETE /api/furniture/:id', () => {
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
-        await deleteFurnitureController(request, response);
+        await deleteRoomController(request, response);
 
         expect(response.status).toHaveBeenCalledWith(204);
         expect(response.json).not.toHaveBeenCalled();
     });
 
-    it('should delete the furniture and return a 204 No Content status code because 0 is a valid id', async () => {
+    it('should delete the room and return a 204 No Content status code because 0 is a valid id', async () => {
 
-        deleteFurnitureService.mockResolvedValue({});
+        deleteRoomService.mockResolvedValue({});
 
         const request = {
             headers: { 'Content-Type': 'application/json' },
@@ -37,7 +37,7 @@ describe('DELETE /api/furniture/:id', () => {
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
-        await deleteFurnitureController(request, response);
+        await deleteRoomController(request, response);
 
         expect(response.status).toHaveBeenCalledWith(204);
         expect(response.json).not.toHaveBeenCalled();
@@ -45,7 +45,7 @@ describe('DELETE /api/furniture/:id', () => {
 
     it('should return a 400 status code when the ID is a non integer string', async () => {
 
-        deleteFurnitureService.mockResolvedValue({});
+        deleteRoomService.mockResolvedValue({});
 
         const request = {
             headers: { 'Content-Type': 'application/json' },
@@ -53,8 +53,8 @@ describe('DELETE /api/furniture/:id', () => {
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
-        await deleteFurnitureController(request, response);
-
+        await deleteRoomController(request, response);
+        console.log(response);
         expect(response.status).toHaveBeenCalledWith(400);
         expect(response.json).toHaveBeenCalledWith({ 
             data: null,
@@ -70,7 +70,7 @@ describe('DELETE /api/furniture/:id', () => {
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() }; 
 
-        await deleteFurnitureController(request, response);
+        await deleteRoomController(request, response);
 
         expect(response.status).toHaveBeenCalledWith(400);
         expect(response.json).toHaveBeenCalledWith({ 
@@ -87,7 +87,7 @@ describe('DELETE /api/furniture/:id', () => {
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() }; 
 
-        await deleteFurnitureController(request, response);
+        await deleteRoomController(request, response);
 
         expect(response.status).toHaveBeenCalledWith(400);
         expect(response.json).toHaveBeenCalledWith({ 
@@ -100,11 +100,11 @@ describe('DELETE /api/furniture/:id', () => {
 
         const request = { 
             headers: { 'Content-Type': 'application/json' },
-            params: { id: '1; DROP TABLE furniture' } 
+            params: { id: '1; DROP TABLE room' } 
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() }; 
 
-        await deleteFurnitureController(request, response);
+        await deleteRoomController(request, response);
 
         expect(response.status).toHaveBeenCalledWith(400);
         expect(response.json).toHaveBeenCalledWith({ 
@@ -121,18 +121,18 @@ describe('DELETE /api/furniture/:id', () => {
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() }; 
 
-        await deleteFurnitureController(request, response);
+        await deleteRoomController(request, response);
 
         expect(response.status).toHaveBeenCalledWith(404);
         expect(response.json).toHaveBeenCalledWith({ 
             data: null,
-            error: 'Furniture with that ID not found.' 
+            error: 'Room with that ID not found.' 
         });
     });
 
     it('should return a 415 status code when content type is not application/json', async () => {
 
-        deleteFurnitureService.mockResolvedValue(
+        deleteRoomService.mockResolvedValue(
             { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
         );
 
@@ -142,7 +142,7 @@ describe('DELETE /api/furniture/:id', () => {
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() }; 
 
-        await deleteFurnitureController(request, response);
+        await deleteRoomController(request, response);
 
         expect(response.status).toHaveBeenCalledWith(415);
         expect(response.json).toHaveBeenCalledWith({ 

@@ -8,7 +8,7 @@ jest.mock('../services/roomServices', () => ({
 
 afterEach(async () => {
     jest.clearAllMocks();
-    jest.resetAllMocks(); // Reset mock states
+    jest.resetAllMocks();
 });
 
 describe('GET /api/room/', () => {
