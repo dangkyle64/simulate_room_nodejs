@@ -22,10 +22,17 @@ module.exports = {
             });
         };
 
-        if (error.message.includes('404 Not Found')) {
+        if (error.message.includes('Furniture not found')) {
             return response.status(404).json({
                 data: null,
                 error: `Furniture with that ID not found.`
+            });
+        };
+
+        if (error.message.includes('Room not found')) {
+            return response.status(404).json({
+                data: null,
+                error: `Room with that ID not found.`
             });
         };
 
@@ -52,7 +59,7 @@ module.exports = {
 
         return response.status(500).json({ 
             data: [], 
-            error: 'Internal Server Error: Error fetching furniture data' 
+            error: 'Internal Server Error: Error fetching data' 
         });
     }
 };

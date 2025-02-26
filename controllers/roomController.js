@@ -1,32 +1,33 @@
 const { getAllRoomsService, getRoomByIdService, addRoomService } = require('../services/roomServices');
+const { handleError } = require('../utils/errorHandler');
+const { handleInitialValidation } = require('../utils/initialValidationHandler');
 
 const getAllRoomsController = async (request, response) => {
     try {
         const rooms = await getAllRoomsService();
-        response.json(rooms);
+        response.status(200).json(rooms);
     } catch(error) {
-        response.status(500).json({ message: 'Error fetching room data' });
+        handleError(error, response);
     };
 };
 
 const getRoomByIdController = async (request, response) => {
 
     try {
-        const id = parseInt(request.params.id);
+        handleInitialValidation(request, response);
 
-        if (isNaN(id)) {
-            throw new Error('Invalid ID input inside of roomByIdController');
-        };
+        const id = parseInt(request.params.id);
 
         const room = await getRoomByIdService(id);
 
-        if (room) {
-            response.json(room);
-        } else {
-            response.status(404).send({ message: 'Room not found'});
+        if (!room) {
+            throw Error('404 Not Found: Room not found'); 
         };
+
+        response.status(200).json(room);
+ 
     } catch(error) {
-        response.status(404).send({ message: 'Room not found'});
+        handleError(error, response);
     };
 };
 
@@ -82,11 +83,11 @@ const updateRoomController = async (request, response) => {
 
             await updateRoomService(id, updateData);
             
-            response.status(200).send({ message: 'Room successfully updated' });
+            response.status(200).json({ message: 'Room successfully updated' });
         };
 
     } catch(error) {
-        response.status(404).send({ message: 'Room not found'});
+        response.status(404).json({ message: 'Room not found'});
     };
 };
 
@@ -101,13 +102,13 @@ const deleteRoomController = async (request, response) => {
         const room = await deleteRoomService(id);
 
         if (room) {
-            response.status(204).send({ message: 'Room successfully deleted' });
+            response.status(204).json({ message: 'Room successfully deleted' });
         } else {
             throw new Error('Room not found');
         };
 
     } catch(error) {
-        response.status(404).send({ message: 'Room not found'});
+        response.status(404).json({ message: 'Room not found'});
     };
 };
 

@@ -1,9 +1,9 @@
-const { getAllFurnituresController, getFurnitureByIdController } = require('../controllers/furnitureController');
-const { getAllFurnituresService, getFurnitureByIdService } = require('../services/furnitureServices');
+const { getAllRoomsController, getRoomByIdController } = require('../controllers/roomController');
+const { getAllRoomsService, getRoomByIdService } = require('../services/roomServices');
 
-jest.mock('../services/furnitureServices', () => ({
-    getFurnitureByIdService: jest.fn(),
-    getAllFurnituresService: jest.fn(),
+jest.mock('../services/roomServices', () => ({
+    getRoomByIdService: jest.fn(),
+    getAllRoomsService: jest.fn(),
 }));
 
 afterEach(async () => {
@@ -11,84 +11,32 @@ afterEach(async () => {
     jest.resetAllMocks(); // Reset mock states
 });
 
-describe('GET /api/furniture/', () => {
-    it('should return all the furniture with a 200 OK status code', async () => {
-        getAllFurnituresService.mockResolvedValue([
-            { 
-                id: 0, 
-                type: "Sofa", 
-                modelUrl: "https://example.com/sofa-model", 
-                length: 20, 
-                width: 9, 
-                height: 8, 
-                x_position: 10, 
-                y_position: 5, 
-                z_position: 0, 
-                rotation_x: 0, 
-                rotation_y: 45, 
-                rotation_z: 0 
-            }, 
-            { 
-                id: 1, 
-                type: "Coffee Table", 
-                modelUrl: "https://example.com/coffee-table-model", 
-                length: 12, 
-                width: 6, 
-                height: 4, 
-                x_position: 15, 
-                y_position: 8, 
-                z_position: 0, 
-                rotation_x: 0, 
-                rotation_y: 0, 
-                rotation_z: 0 
-            }
+describe('GET /api/room/', () => {
+    it('should return all the room with a 200 OK status code', async () => {
+        getAllRoomsService.mockResolvedValue([
+            { id: 0, length: 20, width: 9, height: 8 }, 
+            { id: 1, length: 12, width: 6, height: 4 }
         ]);
 
         const request = {};
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
-        await getAllFurnituresController(request, response);
+        await getAllRoomsController(request, response);
 
         expect(response.status).toHaveBeenCalledWith(200);
         expect(response.json).toHaveBeenCalledWith([
-            { 
-                id: 0, 
-                type: "Sofa", 
-                modelUrl: "https://example.com/sofa-model", 
-                length: 20, 
-                width: 9, 
-                height: 8, 
-                x_position: 10, 
-                y_position: 5, 
-                z_position: 0, 
-                rotation_x: 0, 
-                rotation_y: 45, 
-                rotation_z: 0 
-            }, 
-            { 
-                id: 1, 
-                type: "Coffee Table", 
-                modelUrl: "https://example.com/coffee-table-model", 
-                length: 12, 
-                width: 6, 
-                height: 4, 
-                x_position: 15, 
-                y_position: 8, 
-                z_position: 0, 
-                rotation_x: 0, 
-                rotation_y: 0, 
-                rotation_z: 0 
-            }
+            { id: 0, length: 20, width: 9, height: 8 }, 
+            { id: 1, length: 12, width: 6, height: 4 }
         ]);
     });
 
     it('should return a 500 Internal Server Error when database connection fails', async () => {
-        getAllFurnituresService.mockRejectedValue(new Error('Database connection failed.'));
+        getAllRoomsService.mockRejectedValue(new Error('Database connection failed.'));
 
         const request = {};
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
-        await getAllFurnituresController(request, response);
+        await getAllRoomsController(request, response);
 
         expect(response.status).toHaveBeenCalledWith(500);
         expect(response.json).toHaveBeenCalledWith(
@@ -97,12 +45,12 @@ describe('GET /api/furniture/', () => {
     });
 
     it('should return a 500 Internal Server Error when there is a code exception', async () => {
-        getAllFurnituresService.mockRejectedValue(new Error('Code exception'));
+        getAllRoomsService.mockRejectedValue(new Error('Code exception'));
 
         const request = {};
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
-        await getAllFurnituresController(request, response);
+        await getAllRoomsController(request, response);
 
         expect(response.status).toHaveBeenCalledWith(500);
         expect(response.json).toHaveBeenCalledWith(
@@ -111,12 +59,12 @@ describe('GET /api/furniture/', () => {
     });
 
     it('should return a 500 Internal Server Error when request times out', async () => {
-        getAllFurnituresService.mockRejectedValue(new Error('timeout'));
+        getAllRoomsService.mockRejectedValue(new Error('timeout'));
 
         const request = {};
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
-        await getAllFurnituresController(request, response);
+        await getAllRoomsController(request, response);
 
         expect(response.status).toHaveBeenCalledWith(500);
         expect(response.json).toHaveBeenCalledWith(
@@ -125,12 +73,12 @@ describe('GET /api/furniture/', () => {
     });
 
     it('should return a 500 Internal Server Error when too many clients already (POSTGRES ERROR MESSAGE)', async () => {
-        getAllFurnituresService.mockRejectedValue(new Error('too many clients already'));
+        getAllRoomsService.mockRejectedValue(new Error('too many clients already'));
 
         const request = {};
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
-        await getAllFurnituresController(request, response);
+        await getAllRoomsController(request, response);
 
         expect(response.status).toHaveBeenCalledWith(500);
         expect(response.json).toHaveBeenCalledWith(
@@ -139,25 +87,12 @@ describe('GET /api/furniture/', () => {
     });
 });
 
-describe('GET /api/furniture/:id', () => {
+describe('GET /api/room/:id', () => {
   
-    it('should return the furniture data and 200 status code when the ID is valid', async () => {
+    it('should return the room data and 200 status code when the ID is valid', async () => {
 
-        getFurnitureByIdService.mockResolvedValue(
-            { 
-                id: 2, 
-                "type": "Armchair", 
-                "modelUrl": "https://example.com/armchair-model", 
-                "length": 8, 
-                "width": 8, 
-                "height": 10,
-                "x_position": 5,
-                "y_position": 12,
-                "z_position": 0,
-                "rotation_x": 0,
-                "rotation_y": 90,
-                "rotation_z": 0
-            }
+        getRoomByIdService.mockResolvedValue(
+            { id:2, "length": 8,"width": 8,"height": 10 }
         );
 
         const request = { 
@@ -166,44 +101,18 @@ describe('GET /api/furniture/:id', () => {
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() }; 
 
-        await getFurnitureByIdController(request, response);
+        await getRoomByIdController(request, response);
         
-        expect(getFurnitureByIdService).toHaveBeenCalledWith(2);
+        expect(getRoomByIdService).toHaveBeenCalledWith(2);
         expect(response.status).toHaveBeenCalledWith(200);
         expect(response.json).toHaveBeenCalledWith(
-            { 
-                id: 2, 
-                "type": "Armchair", 
-                "modelUrl": "https://example.com/armchair-model", 
-                "length": 8, 
-                "width": 8, 
-                "height": 10,
-                "x_position": 5,
-                "y_position": 12,
-                "z_position": 0,
-                "rotation_x": 0,
-                "rotation_y": 90,
-                "rotation_z": 0
-            }
+            { id:2, "length": 8,"width": 8,"height": 10 }
         );
     });
 
-    it('should return the furniture and 200 status code because ID being 0 is valid', async () => {
-        getFurnitureByIdService.mockResolvedValue(
-            { 
-                id: 0, 
-                type: "Sofa", 
-                modelUrl: "https://example.com/sofa-model", 
-                length: 20, 
-                width: 9, 
-                height: 8, 
-                x_position: 10, 
-                y_position: 5, 
-                z_position: 0,
-                rotation_x: 0, 
-                rotation_y: 45, 
-                rotation_z: 0 
-            }
+    it('should return the room and 200 status code because ID being 0 is valid', async () => {
+        getRoomByIdService.mockResolvedValue(
+            { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
         );
 
         const request = { 
@@ -212,25 +121,12 @@ describe('GET /api/furniture/:id', () => {
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() }; 
 
-        await getFurnitureByIdController(request, response);
+        await getRoomByIdController(request, response);
         
-        expect(getFurnitureByIdService).toHaveBeenCalledWith(0);
+        expect(getRoomByIdService).toHaveBeenCalledWith(0);
         expect(response.status).toHaveBeenCalledWith(200);
         expect(response.json).toHaveBeenCalledWith(
-            { 
-                id: 0, 
-                type: "Sofa", 
-                modelUrl: "https://example.com/sofa-model", 
-                length: 20, 
-                width: 9, 
-                height: 8, 
-                x_position: 10, 
-                y_position: 5, 
-                z_position: 0,
-                rotation_x: 0, 
-                rotation_y: 45, 
-                rotation_z: 0 
-            }
+            { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
         );
     });
 
@@ -242,7 +138,7 @@ describe('GET /api/furniture/:id', () => {
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() }; 
 
-        await getFurnitureByIdController(request, response);
+        await getRoomByIdController(request, response);
 
         expect(response.status).toHaveBeenCalledWith(400);
         expect(response.json).toHaveBeenCalledWith({ 
@@ -259,7 +155,7 @@ describe('GET /api/furniture/:id', () => {
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() }; 
 
-        await getFurnitureByIdController(request, response);
+        await getRoomByIdController(request, response);
 
         expect(response.status).toHaveBeenCalledWith(400);
         expect(response.json).toHaveBeenCalledWith({ 
@@ -276,7 +172,7 @@ describe('GET /api/furniture/:id', () => {
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() }; 
 
-        await getFurnitureByIdController(request, response);
+        await getRoomByIdController(request, response);
 
         expect(response.status).toHaveBeenCalledWith(400);
         expect(response.json).toHaveBeenCalledWith({ 
@@ -289,11 +185,11 @@ describe('GET /api/furniture/:id', () => {
 
         const request = { 
             headers: { 'Content-Type': 'application/json' },
-            params: { id: '1; DROP TABLE furniture' } 
+            params: { id: '1; DROP TABLE room' } 
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() }; 
 
-        await getFurnitureByIdController(request, response);
+        await getRoomByIdController(request, response);
 
         expect(response.status).toHaveBeenCalledWith(400);
         expect(response.json).toHaveBeenCalledWith({ 
@@ -310,18 +206,18 @@ describe('GET /api/furniture/:id', () => {
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() }; 
 
-        await getFurnitureByIdController(request, response);
+        await getRoomByIdController(request, response);
 
         expect(response.status).toHaveBeenCalledWith(404);
         expect(response.json).toHaveBeenCalledWith({ 
             data: null,
-            error: 'Furniture with that ID not found.' 
+            error: 'Room with that ID not found.' 
         });
     });
 
     it('should return a 415 status code when content type is not application/json', async () => {
 
-        getFurnitureByIdService.mockResolvedValue(
+        getRoomByIdService.mockResolvedValue(
             { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
         );
 
@@ -331,7 +227,7 @@ describe('GET /api/furniture/:id', () => {
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() }; 
 
-        await getFurnitureByIdController(request, response);
+        await getRoomByIdController(request, response);
 
         expect(response.status).toHaveBeenCalledWith(415);
         expect(response.json).toHaveBeenCalledWith({ 

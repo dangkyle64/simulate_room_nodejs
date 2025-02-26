@@ -16,13 +16,12 @@ const getAllFurnituresController = async (request, response) => {
 const getFurnitureByIdController = async (request, response) => {
 
     try {
-
         handleInitialValidation(request, response);
 
         const furniture = await getFurnitureByIdService(parseInt(request.params.id));
 
         if (!furniture) {
-            throw new Error('404 Not Found'); 
+            throw Error('404 Not Found: Furniture not found'); 
         };
 
         return response.status(200).json(furniture);
@@ -74,7 +73,7 @@ const deleteFurnitureController = async (request, response) => {
         const furniture = await deleteFurnitureService(parseInt(request.params.id));
             
         if (!furniture) {
-            throw new Error('404 Not Found'); 
+            throw Error('404 Not Found: Furniture not found'); 
         };
 
         return response.status(204);
