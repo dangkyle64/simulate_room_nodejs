@@ -1,7 +1,7 @@
 const { getAllRoomsService, getRoomByIdService, addRoomService, updateRoomService, deleteRoomService } = require('../services/roomServices');
 const { handleError } = require('../utils/errorHandler');
 const { handleInitialValidation } = require('../utils/initialValidationHandler');
-
+const { handleRoomPOSTValidation, handleRoomPUTValidation } = require('../utils/roomPOSTPUTValidationHandler');
 const getAllRoomsController = async (request, response) => {
     try {
         const rooms = await getAllRoomsService();
@@ -33,24 +33,14 @@ const addRoomController = async (request, response) => {
 
     try {
 
-        const newRoom = request.body;
+        handleRoomPOSTValidation(request, response);
 
-        if (!newRoom.length || !Number.isInteger(newRoom.length) || newRoom.length < 0) {
-            return response.status(400).json({ error: 'Room length is required and must be a positive integer' });
-        };
-    
-        if (!newRoom.width || !Number.isInteger(newRoom.width) || newRoom.width < 0) {
-            return response.status(400).json({ error: 'Room width is required and must be a positive integer' });
-        };
-    
-        if (!newRoom.height || !Number.isInteger(newRoom.height) || newRoom.height < 0) {
-            return response.status(400).json({ error: 'Room height is required and must be a positive integer' });
-        };
+        const newRoom = request.body;
     
         const createdRoom = await addRoomService(newRoom);
         response.status(201).json(createdRoom);
     } catch(error) {
-        response.status(500).json({ error: 'Error creating room' });
+        handleError(error, response);
     };
 };
 

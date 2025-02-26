@@ -12,27 +12,77 @@ afterEach(() => {
 describe('POST /api/furniture', () => {
     it('should return the newly created furniture and a 201 created status code', async () => {
 
-        addFurnitureService.mockResolvedValue({ id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 });
+        addFurnitureService.mockResolvedValue({ 
+            id: 0, 
+            type: "Sofa", 
+            modelUrl: "https://example.com/sofa-model", 
+            length: 20, 
+            width: 9, 
+            height: 8, 
+            x_position: 10, 
+            y_position: 5, 
+            z_position: 0, 
+            rotation_x: 0, 
+            rotation_y: 45, 
+            rotation_z: 0 
+        });
 
         const request = {
             headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: "Sofa", 
+                modelUrl: "https://example.com/sofa-model", 
+                length: 20, 
+                width: 9, 
+                height: 8, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
         await addFurnitureController(request, response);
 
         expect(response.status).toHaveBeenCalledWith(201);
-        expect(response.json).toHaveBeenCalledWith(
-            { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
-        );
+        expect(response.json).toHaveBeenCalledWith({ 
+            id: 0, 
+            type: "Sofa", 
+            modelUrl: "https://example.com/sofa-model", 
+            length: 20, 
+            width: 9, 
+            height: 8, 
+            x_position: 10, 
+            y_position: 5, 
+            z_position: 0, 
+            rotation_x: 0, 
+            rotation_y: 45, 
+            rotation_z: 0 
+        });
     });
 
     it('should return 400 status code when type is not a string', async () => {
 
         const request = {
             headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: 12345, modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: 12345, 
+                modelUrl: "https://example.com/sofa-model", 
+                length: 20, 
+                width: 9, 
+                height: 8, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
@@ -49,7 +99,20 @@ describe('POST /api/furniture', () => {
 
         const request = {
             headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: '', modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: '', 
+                modelUrl: "https://example.com/sofa-model", 
+                length: 20, 
+                width: 9, 
+                height: 8, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
@@ -66,7 +129,20 @@ describe('POST /api/furniture', () => {
 
         const request = {
             headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: '         ', modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: '         ', 
+                modelUrl: "https://example.com/sofa-model", 
+                length: 20, 
+                width: 9, 
+                height: 8, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
@@ -82,7 +158,20 @@ describe('POST /api/furniture', () => {
     it('should return 400 status code when modelUrl is an integer rather than a valid url', async () => {
         const request = {
             headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: 'Chair', modelUrl: 12345, length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: 'Chair', 
+                modelUrl: 12345, 
+                length: 20, 
+                width: 9, 
+                height: 8, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
     
@@ -98,7 +187,20 @@ describe('POST /api/furniture', () => {
     it('should return 400 status code when modelUrl is null rather than a valid url', async () => {
         const request = {
             headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: 'Chair', modelUrl: null, length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: 'Chair', 
+                modelUrl: null, 
+                length: 20, 
+                width: 9, 
+                height: 8, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
     
@@ -114,7 +216,20 @@ describe('POST /api/furniture', () => {
     it('should return 400 status code when modelUrl is an incorrect website setup rather than a valid url', async () => {
         const request = {
             headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: 'Chair', modelUrl: 'google.net', length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: 'Chair', 
+                modelUrl: 'google.net', 
+                length: 20, 
+                width: 9, 
+                height: 8, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
     
@@ -131,7 +246,20 @@ describe('POST /api/furniture', () => {
 
         const request = {
           headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 'notaninteger', width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: "Sofa", 
+                modelUrl: "https://example.com/sofa-model",
+                length: 'notaninteger', 
+                width: 9, 
+                height: 8, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
@@ -148,7 +276,20 @@ describe('POST /api/furniture', () => {
 
         const request = {
           headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: null, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: "Sofa", 
+                modelUrl: "https://example.com/sofa-model", 
+                length: null, 
+                width: 9, 
+                height: 8, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
@@ -165,7 +306,20 @@ describe('POST /api/furniture', () => {
 
         const request = {
           headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: -100, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: "Sofa", 
+                modelUrl: "https://example.com/sofa-model", 
+                length: -100, 
+                width: 9, 
+                height: 8, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
@@ -182,7 +336,20 @@ describe('POST /api/furniture', () => {
 
         const request = {
           headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: '        ', width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: "Sofa", 
+                modelUrl: "https://example.com/sofa-model", 
+                length: '        ', 
+                width: 9, 
+                height: 8, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
@@ -199,7 +366,19 @@ describe('POST /api/furniture', () => {
 
         const request = {
           headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: "Sofa", 
+                modelUrl: "https://example.com/sofa-model", 
+                width: 9, 
+                height: 8, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
@@ -216,7 +395,20 @@ describe('POST /api/furniture', () => {
 
         const request = {
           headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, width: 'notaninteger', height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: "Sofa", 
+                modelUrl: "https://example.com/sofa-model", 
+                length: 1, 
+                width: 'notaninteger', 
+                height: 8, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
@@ -233,7 +425,20 @@ describe('POST /api/furniture', () => {
 
         const request = {
           headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, width: null, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: "Sofa", 
+                modelUrl: "https://example.com/sofa-model", 
+                length: 1, 
+                width: null, 
+                height: 8, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
@@ -250,7 +455,20 @@ describe('POST /api/furniture', () => {
 
         const request = {
             headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, width: -9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: "Sofa", 
+                modelUrl: "https://example.com/sofa-model", 
+                length: 1, 
+                width: -9, 
+                height: 8, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
@@ -267,7 +485,20 @@ describe('POST /api/furniture', () => {
 
         const request = {
           headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, width: '       ', height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: "Sofa", 
+                modelUrl: "https://example.com/sofa-model", 
+                length: 1, 
+                width: '       ', 
+                height: 8, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
@@ -284,7 +515,19 @@ describe('POST /api/furniture', () => {
 
         const request = {
           headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: "Sofa", 
+                modelUrl: "https://example.com/sofa-model", 
+                length: 1, 
+                height: 8, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
@@ -301,7 +544,20 @@ describe('POST /api/furniture', () => {
 
         const request = {
           headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, width: 19, height: 'notaninteger', x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: "Sofa", 
+                modelUrl: "https://example.com/sofa-model", 
+                length: 1, 
+                width: 19, 
+                height: 'notaninteger', 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
@@ -318,7 +574,20 @@ describe('POST /api/furniture', () => {
 
         const request = {
           headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, width: 8, height: null, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: "Sofa", 
+                modelUrl: "https://example.com/sofa-model", 
+                length: 1, 
+                width: 8, 
+                height: null, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
@@ -335,7 +604,20 @@ describe('POST /api/furniture', () => {
 
         const request = {
           headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, width: 9, height: -8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: "Sofa", 
+                modelUrl: "https://example.com/sofa-model", 
+                length: 1, 
+                width: 9, 
+                height: -8, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
@@ -352,7 +634,20 @@ describe('POST /api/furniture', () => {
 
         const request = {
           headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, width: 4, height: '       ', x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: "Sofa", 
+                modelUrl: "https://example.com/sofa-model", 
+                length: 1, 
+                width: 4, 
+                height: '       ', 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
@@ -369,7 +664,19 @@ describe('POST /api/furniture', () => {
 
         const request = {
           headers: { 'Content-Type': 'application/json' },
-            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 1, width: 9, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
+            body: { 
+                id: 0, 
+                type: "Sofa", 
+                modelUrl: "https://example.com/sofa-model", 
+                length: 1, 
+                width: 9, 
+                x_position: 10, 
+                y_position: 5, 
+                z_position: 0, 
+                rotation_x: 0, 
+                rotation_y: 45, 
+                rotation_z: 0 
+            }
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 

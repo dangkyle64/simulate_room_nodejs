@@ -1,8 +1,7 @@
 const { getAllFurnituresService, getFurnitureByIdService, addFurnitureService, deleteFurnitureService, updateFurnitureService } = require('../services/furnitureServices');
 const { handleError } = require('../utils/errorHandler');
 const { handleInitialValidation } = require('../utils/initialValidationHandler');
-const { handlePOSTValidation } = require('../utils/postValidationHandler');
-const { handlePUTValidation } = require('../utils/putValidationHandler');
+const { handleFurniturePOSTValidation, handleFurniturePUTValidation } = require('../utils/furniturePOSTPUTValidationHandler');
 
 const getAllFurnituresController = async (request, response) => {
     try {
@@ -35,7 +34,7 @@ const addFurnitureController = async (request, response) => {
     const newFurniture = request.body;
    
     try {
-        handlePOSTValidation(request, response);
+        handleFurniturePOSTValidation(request, response);
 
         const createdFurniture = await addFurnitureService(newFurniture);
         response.status(201).json(createdFurniture);
@@ -46,9 +45,8 @@ const addFurnitureController = async (request, response) => {
 
 const updateFurnitureController = async (request, response) => {
 
-    
     try {
-        handlePUTValidation(request, response);
+        handleFurniturePUTValidation(request, response);
 
         const id = parseInt(request.params.id);
         const updateData = request.body;
