@@ -2,6 +2,7 @@ const { getAllFurnituresService, getFurnitureByIdService, addFurnitureService, d
 const { handleError } = require('../utils/errorHandler');
 const { handleInitialValidation } = require('../utils/initialValidationHandler');
 const { handlePOSTValidation } = require('../utils/postValidationHandler');
+const { handlePUTValidation } = require('../utils/putValidationHandler');
 
 const getAllFurnituresController = async (request, response) => {
     try {
@@ -33,18 +34,23 @@ const getFurnitureByIdController = async (request, response) => {
 
 const addFurnitureController = async (request, response) => {
     const newFurniture = request.body;
-
-    handlePOSTValidation(request, response);
+   
     try {
+        handlePOSTValidation(request, response);
+
         const createdFurniture = await addFurnitureService(newFurniture);
         response.status(201).json(createdFurniture);
     } catch(error) {
-        response.status(500).json({ error: 'Error creating furniture '});
+        handleError(error, response);
     };
 };
 
 const updateFurnitureController = async (request, response) => {
+
+    
     try {
+        handlePUTValidation(request, response);
+
         const id = parseInt(request.params.id);
         const updateData = request.body;
 
@@ -55,7 +61,7 @@ const updateFurnitureController = async (request, response) => {
             updateFurniture: updatedFurniture.toJSON()
         });
     } catch (error) {
-        return response.status(404).json({ message: 'Furniture not found' });
+        handleError(error, response);
     }
 };
 

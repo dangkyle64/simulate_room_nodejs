@@ -15,13 +15,13 @@ afterEach(() => {
 });
 
 describe('PUT /api/furniture/:id', () => {
-    it('should delete the furniture and return a 204 No Content status code', async () => {
+    it('should update the furniture, returning back the updated data, message of success, and the 200 OK status message', async () => {
 
-        updateFurnitureService.mockResolvedValue({'id': 1, type: 'Chair', toJSON: jest.fn().mockReturnValue({ id: 1, type: 'Chair' })});
+        updateFurnitureService.mockResolvedValue({ id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0, toJSON: jest.fn().mockReturnValue({ id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 })});
 
         const request = {
-            params: { 'id': '1' },
-            body: {'id': 1, type: 'Chair'},
+            params: { id: '1' },
+            body: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 },
         };
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
@@ -30,9 +30,30 @@ describe('PUT /api/furniture/:id', () => {
         expect(response.status).toHaveBeenCalledWith(200);
         expect(response.json).toHaveBeenCalledWith({
             message: 'Furniture successfully updated',
-            updateFurniture: { id: 1, type: 'Chair' }
+            updateFurniture: { id: 0, type: "Sofa", modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 }
         });
-    })
+    });
+
+    it('should return a 400 status error error as the type is not a string', async () => {
+
+      updateFurnitureService.mockRejectedValue({data: null, error: 'Invalid type update. Must be a string.', toJSON: jest.fn().mockReturnValue({ data: null, error: 'Invalid type update. Must be a string.' })});
+
+      const request = {
+          params: { id: '1' },
+          body: { id: 0, type: 12345, modelUrl: "https://example.com/sofa-model", length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 },
+      };
+      const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+      await updateFurnitureController(request, response);
+
+      expect(response.status).toHaveBeenCalledWith(400);
+      expect(response.json).toHaveBeenCalledWith({
+          data: null,
+          error: 'Invalid type update. Must be a string.'
+      });
+  });
+
+
   /**
    * 
    *         if (isNaN(id)) {

@@ -15,6 +15,13 @@ module.exports = {
             });
         };
 
+        if (error.message.includes('400 Type')) {
+            return response.status(400).json({
+                data: null,
+                error: `Invalid type update. Must be a string.`
+            });
+        };
+
         if (error.message.includes('404 Not Found')) {
             return response.status(404).json({
                 data: null,
