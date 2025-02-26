@@ -48,10 +48,9 @@ const updateFurnitureController = async (request, response) => {
     try {
         handleFurniturePUTValidation(request, response);
 
-        const id = parseInt(request.params.id);
         const updateData = request.body;
 
-        const updatedFurniture = await updateFurnitureService(id, updateData);
+        const updatedFurniture = await updateFurnitureService(parseInt(request.params.id), updateData);
 
         return response.status(200).json({ 
             message: 'Furniture successfully updated', 
@@ -61,7 +60,6 @@ const updateFurnitureController = async (request, response) => {
         handleError(error, response);
     }
 };
-
 
 const deleteFurnitureController = async (request, response) => {
     try {

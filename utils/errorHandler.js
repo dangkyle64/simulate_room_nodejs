@@ -1,6 +1,41 @@
 module.exports = {
     handleError: (error, response) => {
 
+        if(error.message.includes('Invalid Type. Must be a valid string.')) {
+            return response.status(400).json({
+                data: null,
+                error: 'Invalid Type. Must be a valid string.'
+            });
+        };
+
+        if(error.message.includes('Invalid modelUrl. Must be a valid url.')) {
+            return response.status(400).json({
+                data: null,
+                error: 'Invalid modelUrl. Must be a valid url.'
+            });
+        };
+
+        if(error.message.includes('Invalid length. Must be a positive integer.')) {
+            return response.status(400).json({
+                data: null,
+                error: 'Invalid length. Must be a positive integer.'
+            });
+        };
+
+        if(error.message.includes('Invalid width. Must be a positive integer.')) {
+            return response.status(400).json({
+                data: null,
+                error: 'Invalid width. Must be a positive integer.'
+            });
+        };
+
+        if(error.message.includes('Invalid height. Must be a positive integer.')) {
+            return response.status(400).json({
+                data: null,
+                error: 'Invalid height. Must be a positive integer.'
+            });
+        };
+
         if (error.message.includes('400 invalid')) {
             return response.status(400).json({
                 data: null,

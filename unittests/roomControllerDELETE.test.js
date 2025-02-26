@@ -54,7 +54,7 @@ describe('DELETE /api/room/:id', () => {
         const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
 
         await deleteRoomController(request, response);
-        console.log(response);
+
         expect(response.status).toHaveBeenCalledWith(400);
         expect(response.json).toHaveBeenCalledWith({ 
             data: null,

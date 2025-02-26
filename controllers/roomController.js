@@ -46,36 +46,20 @@ const addRoomController = async (request, response) => {
 
 const updateRoomController = async (request, response) => {
     try {
-        const id = parseInt(request.params.id);
 
-        if (isNaN(id)) {
-            throw new Error('Invalid ID input inside of updateRoomController');
-        };
+        handleRoomPUTValidation(request, response);
 
-        const room = await getRoomByIdService(id);
+        const updateData = request.body;
 
-        if (room) {
-            let updateData = request.body;
-
-            if (!Number.isInteger(updateData.length) || updateData.length < 0) {
-                return response.status(400).json({ error: 'Room length update must be a valid positive integer' });
-            };
-
-            if (!Number.isInteger(updateData.width) || updateData.width < 0) {
-                return response.status(400).json({ error: 'Room width update must be a valid positive integer' });
-            };
-
-            if (!Number.isInteger(updateData.height) || updateData.height < 0) {
-                return response.status(400).json({ error: 'Room height update must be a valid positive integer' });
-            };
-
-            await updateRoomService(id, updateData);
+        const updatedRoom = await updateRoomService(parseInt(request.params.id), updateData);
             
-            response.status(200).json({ message: 'Room successfully updated' });
-        };
+        return response.status(200).json({ 
+            message: 'Room successfully updated', 
+            updateRoom: updatedRoom.toJSON()
+        });
 
     } catch(error) {
-        response.status(404).json({ message: 'Room not found'});
+        handleError(error, response);
     };
 };
 
