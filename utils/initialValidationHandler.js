@@ -1,7 +1,7 @@
 module.exports = {
     handleInitialValidation: (request, response) => {
 
-        if (request.headers['Content-Type'] !== 'application/json') {
+        if (request.method !== 'DELETE' && request.headers['Content-Type'] !== 'application/json') {
             throw Error('415 Unsupported Media Type: The request body must be in JSON format.')
         };
 
