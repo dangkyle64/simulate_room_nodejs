@@ -91,7 +91,7 @@ describe('POST /api/furniture', () => {
         expect(response.status).toHaveBeenCalledWith(400);
         expect(response.json).toHaveBeenCalledWith({
             data: null,
-            error: 'Invalid Type. Must be a valid string.'
+            error: 'Invalid type. Must be a valid string.'
         });
     });
 
@@ -121,7 +121,7 @@ describe('POST /api/furniture', () => {
         expect(response.status).toHaveBeenCalledWith(400);
         expect(response.json).toHaveBeenCalledWith({
             data: null,
-            error: 'Invalid Type. Must be a valid string.'
+            error: 'Invalid type. Must be a valid string.'
         });
     });
 
@@ -151,7 +151,7 @@ describe('POST /api/furniture', () => {
         expect(response.status).toHaveBeenCalledWith(400);
         expect(response.json).toHaveBeenCalledWith({
             data: null,
-            error: 'Invalid Type. Must be a valid string.'
+            error: 'Invalid type. Must be a valid string.'
         });
     });
 

@@ -27,12 +27,12 @@ module.exports = {
     handleFurniturePUTValidation: (request, response) => {
 
         if(typeof request.body.type !== 'string') {
-            throw Error('400 Type Update');
+            throw Error('Invalid Type. Must be a valid string.');
         };
 
         const validURLRegex = /^(https?|ftp):\/\/[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\/[^\s]*)?$/i;
         if(typeof request.body.modelUrl !== 'string' || !validURLRegex.test(request.body.modelUrl)) {
-            throw Error('400 ModelUrl Update');
+            throw Error('Invalid modelUrl. Must be a valid url.');
         };
 
         if(!Number.isInteger(request.body.length) || request.body.length < 0) {

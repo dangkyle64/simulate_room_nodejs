@@ -4,7 +4,7 @@ module.exports = {
         if(error.message.includes('Invalid Type. Must be a valid string.')) {
             return response.status(400).json({
                 data: null,
-                error: 'Invalid Type. Must be a valid string.'
+                error: 'Invalid type. Must be a valid string.'
             });
         };
 
@@ -41,19 +41,12 @@ module.exports = {
                 data: null,
                 error: `Invalid ID. Must be a positive integer.`
             });
-        };
+        }; 
 
         if (error.message.includes('400 leading')) {
             return response.status(400).json({
                 data: null,
                 error: `Invalid ID. Must not have trailing zeros.`
-            });
-        };
-
-        if (error.message.includes('400 Type')) {
-            return response.status(400).json({
-                data: null,
-                error: `Invalid type update. Must be a string.`
             });
         };
 

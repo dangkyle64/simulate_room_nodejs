@@ -34,7 +34,7 @@ describe('PUT /api/furniture/:id', () => {
         });
     });
 
-    it('should return a 400 status error error as the type is not a string', async () => {
+    it('should return a 400 status error as the type is not a string', async () => {
 
       updateFurnitureService.mockRejectedValue({data: null, error: 'Invalid type update. Must be a string.', toJSON: jest.fn().mockReturnValue({ data: null, error: 'Invalid type update. Must be a string.' })});
 
@@ -49,9 +49,28 @@ describe('PUT /api/furniture/:id', () => {
       expect(response.status).toHaveBeenCalledWith(400);
       expect(response.json).toHaveBeenCalledWith({
           data: null,
-          error: 'Invalid type update. Must be a string.'
+          error: 'Invalid type. Must be a valid string.'
       });
-  });
+    });
+
+    it('should return a 400 status error if modelUrl is not a proper URL', async () => {
+
+      updateFurnitureService.mockRejectedValue({data: null, error: 'Invalid modelUrl. Must be a valid url.', toJSON: jest.fn().mockReturnValue({ data: null, error: 'Invalid modelUrl. Must be a valid url.' })});
+
+      const request = {
+          params: { id: '1' },
+          body: { id: 0, type: 'Chair', modelUrl: 12345, length: 20, width: 9, height: 8, x_position: 10, y_position: 5, z_position: 0, rotation_x: 0, rotation_y: 45, rotation_z: 0 },
+      };
+      const response = { json: jest.fn(), status: jest.fn().mockReturnThis() };
+
+      await updateFurnitureController(request, response);
+
+      expect(response.status).toHaveBeenCalledWith(400);
+      expect(response.json).toHaveBeenCalledWith({
+          data: null,
+          error: 'Invalid modelUrl. Must be a valid url.'
+      });
+    });
 
 
   /**
