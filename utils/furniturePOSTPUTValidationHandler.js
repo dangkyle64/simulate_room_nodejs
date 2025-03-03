@@ -36,15 +36,15 @@ module.exports = {
         };
 
         if(!Number.isInteger(request.body.length) || request.body.length < 0) {
-            throw Error('400 Length Update');
+            throw Error('Invalid length. Must be a positive integer.');
         };
 
         if(!Number.isInteger(request.body.width) || request.body.width < 0) {
-            throw Error('400 Width Update');
+            throw Error('Invalid width. Must be a positive integer.');
         };
 
         if(!Number.isInteger(request.body.height) || request.body.height < 0) {
-            throw Error('400 Height Update');
+            throw Error('Invalid height. Must be a positive integer.');
         };
 
         return {valid: true};
